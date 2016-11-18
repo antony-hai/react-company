@@ -1,0 +1,87 @@
+@border-color: rgba(215, 215, 215, 1);
+@bg-color-base: rgba(242, 242, 242, 1);
+@bg-color-light: rgba(248, 248, 248, 1);
+
+.makeBorder() {
+ border: @border-color 1px solid;
+}
+
+.funcBox {
+  .makeBorder();
+  position: relative;
+  border-radius: 5px;
+  width: 98%;
+}
+
+.header {
+  background-color: @bg-color-base;
+  height: 3rem;
+  padding: 1rem 8px;
+  border-bottom: @border-color 1px solid;
+}
+
+.articleBox {
+  padding: 8px;
+  min-height: 200px;
+}
+
+.formBox {
+  background-color: @bg-color-light;
+  padding: 16px;
+  .makeBorder();
+}
+
+.formItemBox {
+  width: 100%;
+}
+
+.anyBox {
+  .makeBorder();
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+  &:before, &:after {
+    content: ' ';
+    clear: both;
+  }
+}
+.anyBox2{
+  .makeBorder();
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+  //&:before, &:after {
+  //  content: ' ';
+  //  clear: both;
+  //}
+}
+
+.boxr{
+  float: right;
+}
+.spaceBox {
+  display: block;
+  margin: 2rem 0;
+}
+
+.grayText {
+  color: #aaa;
+}
+
+:global {
+  .ant-notification{
+    top: auto !important;
+    bottom:100px !important;
+  }
+  .ant-menu-item>a {
+    padding: 0 18px 0 35px; 
+    
+  }
+  .ant-menu-item {
+    padding: 0 !important;
+    
+  }
+}

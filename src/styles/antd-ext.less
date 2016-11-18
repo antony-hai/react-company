@@ -1,0 +1,151 @@
+@import "./base/variable/color";
+
+.skinPrimary() {
+  .bgPrimary();
+  .bdPrimary();
+}
+.skinSecondary() {
+  .bgSecondary();
+  .bdSecondary();
+}
+.focusShadow() {
+  &:focus {
+    box-shadow: 0 0 0 2px rgba(13, 184, 183, 0.2);
+  }
+}
+
+:global {
+  ::selection {
+    .bgPrimary();
+  }
+  body {
+    a {
+      .fgPrimary();
+      &:hover {
+        .fgSecondary();
+      }
+    }
+    // 按钮
+    .ant-btn {
+      &:hover {
+        .bdPrimary();
+        .fgPrimary();
+      }
+      &-primary {
+        .skinPrimary();
+        &:hover, &:focus {
+          .skinSecondary();
+          color: #fff;
+        }
+      }
+    }
+    // 输入框
+    .ant-input {
+      &:hover, &:focus {
+        .bdPrimary();
+      }
+      .focusShadow();
+    }
+    // 单选框
+    .ant-radio-inner {
+      &:after {
+        .bgPrimary();
+      }
+    }
+    // 复选框
+    .ant-checkbox-checked {
+      .ant-checkbox-inner {
+        .skinPrimary();
+      }
+    }
+    // 下拉框
+    .ant-select-selection {
+      &:hover, &:focus {
+        .bdPrimary();
+      }
+      .focusShadow();
+    }
+    .ant-select-dropdown {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    // 可选的树形列表
+    .ant-tree-checkbox-checked,
+    .ant-tree-checkbox-indeterminate {
+      .ant-tree-checkbox-inner {
+        .skinPrimary();
+      }
+    }
+    // loading
+    .ant-spin {
+      .fgPrimary();
+      &-dot {
+        &:before, &:after {
+          .bgPrimary();
+        }
+      }
+    }
+    // 标签
+    .ant-tag-green {
+      .bgPrimary();
+    }
+    // 日期组件
+    .ant-calendar {
+      .ant-calendar-today .ant-calendar-date {
+        .bdPrimary();
+        .fgPrimary();
+      }
+      .ant-calendar-selected-day .ant-calendar-date {
+        .bgPrimary();
+        color: #fff;
+      }
+    }
+    // tab
+    .ant-tabs-nav {
+      .ant-tabs-tab:hover,
+      .ant-tabs-tab-active {
+        .fgPrimary();
+      }
+      .ant-tabs-ink-bar {
+        .bgPrimary();
+      }
+    }
+    // 分页
+    .ant-pagination {
+      &-item,
+      &-prev,
+      &-next {
+        &:hover {
+          .bdPrimary();
+          a {
+            .fgPrimary();
+          }
+        }
+        &-active {
+          .skinPrimary();
+          &:hover {
+            a {
+              color: #fff;
+            }
+          }
+        }
+      }
+      &-disabled {
+        &, &:hover {
+          border-color: #d9d9d9;
+          a {
+            color: #ccc;
+          }
+        }
+      }
+      &-options-quick-jumper {
+        input {
+          &:hover, &:focus {
+            .bdPrimary();
+          }
+          .focusShadow();
+        }
+      }
+    }
+  }
+}

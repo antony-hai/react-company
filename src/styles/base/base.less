@@ -1,0 +1,56 @@
+@import "./variable/color";
+
+// 全局通用样式
+:global {
+  body {
+    width: 100%;
+    min-width: 1080px;
+  }
+  .txt-muted {
+    color: #aaa;
+  }
+  .txt-danger {
+    color: #E90015;
+  }
+  .clearfix {
+    *display: table;
+    *zoom: 1;
+    &:after {
+      clear: both;
+      display: block;
+      height: 0;
+      visibility: hidden;
+      line-height: 0;
+      content: '\20';
+    }
+  }
+  .tl {
+    text-align: left;
+  }
+  .tc {
+    text-align: center;
+  }
+  .tr {
+    text-align: right;
+  }
+  .fl {
+    float: left;
+  }
+  .fr {
+    float: right;
+  }
+  .fn {
+    float: none;
+  }
+  .hide {
+    display: none;
+  }
+  .btn-group {
+    button {
+      margin-right: 15px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

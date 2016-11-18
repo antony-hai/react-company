@@ -1,0 +1,40 @@
+@border-color: rgba(215, 215, 215, 1);
+.makeBorder() {
+  border: @border-color 1px solid;
+}
+
+.flexBtnBox{
+  display: flex;
+  justify-content: space-around;
+  .makeBorder();
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+  &:before, &:after {
+    content: ' ';
+    clear: both;
+  }
+}
+.successBox{
+  margin: 10px;
+  padding: 10px; 
+  div{
+    margin: 10px;
+    padding-top: 10px;
+  }
+  p{
+    margin: 20px 10px 30px 20px;
+    font-size: 13px;
+  }
+}
+
+
+.ctrlSpan{
+    color: red;
+    text-align: center;
+    line-height: 35px;
+}
+.suggess{
+  float: left;
+  color: #ffaadd;
+}
