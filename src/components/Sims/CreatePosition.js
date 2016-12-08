@@ -2,39 +2,33 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { Row, Col, Form, Input, Button, Select,
-  TreeSelect, message, DatePicker, Checkbox, Radio, Modal } from 'antd';
+import { Row, Col, Form, Input, Button, message } from 'antd';
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch';
 import { createPositionUrl } from '../../urlAddress'
 import { regExp } from '../../services/common'
 import styles from './sim.less'
+import * as Actions from '../../actions'
 
 const FormItem = Form.Item;
-const RangePicker = DatePicker.RangePicker;
 const createForm = Form.create;
-const Option = Select.Option;
+
+const RES_NAME = 'simCards'
+
 const gridSpan = {
-  labelCol: {
-    xs: 5,
-    sm: 4,
-    md: 3,
-  },
+  labelCol: { span: 3 },
   wrapperCol: { span: 6 },
 };
-
+const remandSpan = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+}
 class CreatePosition extends Component {
   constructor() {
     super();
-    this.state = {
-      editId: null,
-      isEdit: false,
-      startNum: '',
-      books: '',
-      pages: '',
-      boxes: '',
-      storeAt: null,
-      loginStatus: true,
-    }
+  }
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch(Actions.Book.getBooksAction({ field: '' }))
   }
   //数据提交到服务器
   handleSubmit(e) {
@@ -44,25 +38,13 @@ class CreatePosition extends Component {
       if (!!errors) {
         return;
       }
-      const state = this.state;
-      let url = createPositionUrl;
-      let method = 'POST';
-      xFetch(url, {
-        method,
-        data: {
-          ...values,
-          _token: getTokenOfCSRF(),
-        },
-      }).then(res => {
-        dispatch({
-          type: 'books/get',
-        });
-        message.success('创建成功');
-        this.context.router.push('/manage/card/list');
-      }, error => {
-        message.error(error);
-      });
+      const data = { ...values, _token: getTokenOfCSRF() }
+      dispatch(Actions.Res.postAction(RES_NAME, data, this.handleSuccess.bind(this)))
     });
+  }
+  handleSuccess(data) {
+    message.success('创建成功', 1.5)
+    this.context.router.push('/manage/card/list');
   }
 
   render() {
@@ -74,25 +56,27 @@ class CreatePosition extends Component {
     return (
         <section>
           <Form>
-            <FormItem
-              label="起始数"
-              {...gridSpan}
-            >
-              <Input
-                placeholder="请输入"
-                {...getFieldProps('startNum', {
-                  rules: [
-                    { required: true, message: '不能为空' },
-                    { pattern: regExp.wxcount, message: '请输入非零自然数' },
-                  ],
-                })}
-              />
-              <span className={styles.suggess}>{`已经存在${books.length}本,建议从${books.length+1}本开始`}</span>
-            </FormItem>
-            <FormItem
-              label="建几本"
-              {...gridSpan}
-            >
+            <Row>
+              <Col span={9}>
+                <FormItem label="起始数" {...remandSpan}>
+                  <Input
+                    placeholder="请输入"
+                    {...getFieldProps('startNum', {
+                      rules: [
+                        { required: true, message: '不能为空' },
+                        { pattern: regExp.wxcount, message: '请输入非零自然数' },
+                      ],
+                    })}
+                  />
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <span className={styles.suggess}>
+                  {`已经存在${books.length}本,建议从${books.length + 1}本开始`}
+                </span>
+              </Col>
+            </Row>
+            <FormItem label="建几本" {...gridSpan}>
               <Input
                 placeholder="请输入"
                 {...getFieldProps('books', {
@@ -103,10 +87,7 @@ class CreatePosition extends Component {
                 })}
               />
             </FormItem>
-            <FormItem
-              label="每册几页"
-              {...gridSpan}
-            >
+            <FormItem label="每册几页" {...gridSpan}>
               <Input
                 placeholder="请输入"
                 {...getFieldProps('pages', {
@@ -117,10 +98,7 @@ class CreatePosition extends Component {
                 })}
               />
             </FormItem>
-            <FormItem
-              label="每页几格"
-              {...gridSpan}
-            >
+            <FormItem label="每页几格" {...gridSpan}>
               <Input
                 placeholder="请输入"
                 {...getFieldProps('boxes', {
@@ -153,7 +131,7 @@ CreatePosition.contextTypes = {
   router: React.PropTypes.object.isRequired,
 }
 const mapStateToProps = ({ position }) => {
- return Object.assign({}, { books: [], pages: [], boxes: [], }, position)
+ return Object.assign({}, { books: [], pages: [], boxes: [] }, position)
 }
 
 

@@ -108,8 +108,16 @@ module.exports = {
                     "title": "录入信息提示",
                     "uri": "/success",
                     "group": "card",
-                    "model": "manage"
-                  }
+                    "model": "manage",
+                  },
+                  {
+                    "_id": "5808b4c7bc1d3a226400192c",
+                    "key": "card/upload",
+                    "title": "批量导入手机号",
+                    "uri": "/upload",
+                    "group": "card",
+                    "model": "manage",
+                  },
                 ]
               },
             ]
@@ -147,15 +155,13 @@ module.exports = {
       }
     )
   },
-
-
   'POST /api/disable'(req, res) {
     res.json({
       success: true,
       data: [],
     });
   },
-  'POST /auth/password/modify'(req, res) {
+  'POST /v1/auth/password/modify'(req, res) {
     res.json({
       success: true,
       data: 'modify Password successed',
@@ -167,7 +173,12 @@ module.exports = {
       data: [],
     });
   },
-
+  'POST /v1/simCards/import'(req, res) {
+    res.json({
+      success: true,
+      data: [],
+    });
+  },
   'GET /v1/wxclients'(req, res) {
     res.json({
       success: true,
@@ -187,7 +198,7 @@ module.exports = {
           password: '1234qwer',
           loginStatus: 1,
           status: 1,
-          _id: '12343244',
+          _id: 'aaaa12343244',
           uin: '',
           "index": {
             "book": 2,
@@ -205,7 +216,20 @@ module.exports = {
           }, {
             key: 'qrcode',
             url: ""
-          },]
+          },
+          {
+            key: 'login',
+            url: '',
+          },
+          {
+            key: 'clear',
+            url: '',
+          },
+          {
+            key: 'update',
+            url: '',
+          }
+          ]
         },],
       },
     });
@@ -278,6 +302,7 @@ module.exports = {
           4,
           5,
           6,
+          100,
         ]
       }
     })
@@ -361,7 +386,7 @@ module.exports = {
             options: { ecoModule: ['基础信息', '社交信息'] },
             wxClientCount: 3424,
             projectCount: 2222,
-
+            deleted_at: '',
           },
           {
             _id: 3,
@@ -461,8 +486,8 @@ module.exports = {
       success: true,
       data: {
         _id: id,
-        name: '腾讯',
-        contact: '张小龙',
+        name: '微信',
+        contact: '马化腾',
         contactTel: "18882256523",
         startDate: "2016-10-10 00:00:00",
         endDate: "2017-10-17 00:00:00",
@@ -523,5 +548,4 @@ module.exports = {
       },
     })
   },
-
 };

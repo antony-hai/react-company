@@ -21,9 +21,8 @@ export default class Lists extends Component {
         render(index) {
           if (index) {
             return <span>{indexCache(index)}</span>
-          } else {
-            return '-'
           }
+          return '-'
         },
       },
       {
@@ -36,7 +35,7 @@ export default class Lists extends Component {
           }
           return <div dangerouslySetInnerHTML={{ __html: nickName }} />
         },
-      }, 
+      },
       {
         title: 'UIN',
         key: 'uin',
@@ -76,7 +75,7 @@ export default class Lists extends Component {
             case -1:
               return (<span style={{ color: 'red' }}>异常</span>);
           }
-        }
+        },
       },
       {
         title: '账号状态',
@@ -92,7 +91,7 @@ export default class Lists extends Component {
           } else {
             return (<span>瞬间爆炸</span>)
           }
-        }
+        },
       },
       {
         title: '操作',

@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { Spin, message, Row, Col, Button } from 'antd'
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch'
-import { getListAction } from '../../services/resources'
 import { when } from '../../services/common';
 import FilterBox, { handleCreateFilter, handleSubmitFilter } from '../FilterBox'
 import FilterForm from './FilterForm'
 import Lists from './Lists'
 import styles from '../app.less'
 import { channelUrl } from '../../urlAddress'
+import * as Actions from '../../actions'
 
 const RES_NAME = 'companies';
 
@@ -48,60 +48,24 @@ class Channels extends Component {
   loadResource(pagination = { current: 1 }) {
     const { filter, dispatch } = this.props;
     const { current: page = 1 } = pagination;
-    dispatch(getListAction({
-      resName: RES_NAME,
-      filter,
-      page,
-    }));
+    dispatch(Actions.Res.getListAction({ resName: RES_NAME, filter, page }));
   }
 
   handleDisabled(userId, record) {
     const { dispatch } = this.props;
-    const url = `${channelUrl}/${userId}`
+    const data = { _id: userId, _token: getTokenOfCSRF() }
     if (record.deleted_at) {
-      xFetch(url, {
-        method: 'OPTIONS',
-        data: {
-          _token: getTokenOfCSRF(),
-          _id: userId,
-        }
-      }).then(res => {
-        const data = res.jsonResult.data;
-        dispatch({
-          type: 'api/user/disabled',
-          resName: RES_NAME,
-          payload: userId,
-          data,
-        })
-        message.success('启用成功')
-      },
-        error => {
-          message.error(error)
-        }
-      )
+      dispatch(Actions.Res.optionsAction(RES_NAME, data, this.optionsSuccess))
     } else {
-      const method = 'DELETE';
-      xFetch(url, {
-        method,
-        data: {
-          _id: userId,
-          _token: getTokenOfCSRF(),
-        },
-      }).then(res => {
-        const data = res.jsonResult.data;
-        dispatch({
-          type: 'api/user/disabled',
-          resName: RES_NAME,
-          payload: userId,
-          data,
-        });
-        message.success('禁用成功');
-      }, error => {
-        message.error(error);
-      });
+      dispatch(Actions.Res.deleteAction(RES_NAME, data, this.deleteSuccess))
     }
   }
-
+  optionsSuccess() {
+    message.success('启用成功', 2)
+  }
+  deleteSuccess() {
+    message.success('禁用成功', 2)
+  }
   render() {
     const { loading, list, pagination } = this.props.resources;
     if (loading) {
@@ -113,7 +77,7 @@ class Channels extends Component {
           createFilter={handleCreateFilter.bind(this, thisFilter)}
         >
           <FilterForm
-            handleFilter={this.onSubmitFilter.bind(this)}       
+            handleFilter={this.onSubmitFilter.bind(this)}
           />
         </FilterBox>
         <Row className={styles.anyBox}>

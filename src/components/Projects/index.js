@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Spin, message, Row, Col, Button } from 'antd'
+import { Spin, message, Row, Col, Button, Modal } from 'antd'
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch'
-import { getListAction } from '../../services/resources'
+import { Res as Actions } from '../../actions'
 import { when } from '../../services/common';
 import Editor, { EDITOR_OPEN, EDITOR_CANCEL } from '../EditorModal';
 import FilterBox, { handleCreateFilter, handleSubmitFilter } from '../FilterBox'
@@ -28,6 +28,8 @@ class Projects extends Component {
     super();
     this.eventSource = null
     this.state = {
+      modalVisible: false,
+      uin_id: '',
       list: [],
       loginData: { // 当前微信帐号的信息
         qrcode: '', // 二维码图片地址
@@ -46,26 +48,23 @@ class Projects extends Component {
       this.getProjects()
     });
   }
-
+  //分页函数
   onChange(pagination) {
     this.loadResource(pagination);
   }
-
+  //筛选函数
   onSubmitFilter(filters) {
     const { dispatch } = this.props;
     when(() => {
-      dispatch(
-        handleSubmitFilter(filters)
-      );
+      dispatch(handleSubmitFilter(filters));
     }).then(() => {
       this.loadResource();
     });
   }
+  //重置函数
   handleReset() {
     const { dispatch } = this.props;
-    dispatch(
-      handleSubmitFilter(thisFilter)
-    );
+    dispatch(handleSubmitFilter(thisFilter));
   }
   // 二维码获取成功
   getQrcodeSuccess(uuid) {
@@ -73,8 +72,8 @@ class Projects extends Component {
     this.setState({
       loginData: {
         ...loginData,
-      qrcode: `/v1/api/loginQrcode/${uuid}`, // 二维码图片地址
-      status: 101, // 二维码获取中：100，获取成功: 101, 扫码成功: 102, 登录成功: 103
+        qrcode: `/v1/api/loginQrcode/${uuid}`, // 二维码图片地址
+        status: 101, // 二维码获取中：100，获取成功: 101, 扫码成功: 102, 登录成功: 103
       },
     });
   }
@@ -161,72 +160,46 @@ class Projects extends Component {
     if (this.eventSource !== null) {
       this.eventSource.close()
       this.eventSource = null
-      //alert('nima')
     }
   }
-
+  //整个列表资源
   loadResource(pagination = { current: 1 }) {
     const { filter, dispatch } = this.props;
     const { current: page = 1 } = pagination;
-    dispatch(getListAction({
-      resName: RES_NAME,
-      filter,
-      page,
-    }));
+    dispatch(Actions.getListAction({ resName: RES_NAME, filter, page }));
   }
-
   getProjects() {
     const { dispatch } = this.props;
     const filter = {};
     const page = 0;
-    dispatch(getListAction({
-      resName: RES_PROJECT,
-      filter,
-      page,
-    }));
+    dispatch(Actions.getListAction({ resName: RES_PROJECT, filter, page }));
   }
 
   //清除uin
   handleUIN(wxid) {
-    const { dispatch } = this.props;
-    const url = `${projectUrl}/${wxid}`;
-    const method = 'PATCH';
-    xFetch(url, {
-      method: method,
-      data: {
-        user_id: wxid,
-        uin: 0,
-        _token: getTokenOfCSRF(),
-      },
-    }).then(res => {
-      const data = res.jsonResult.data;
-      dispatch({
-        type: 'api/clearUIN',
-        resName: RES_NAME,
-        payload: wxid,
-        data,
-      });
-      message.success('清uin成功');
-    }, error => {
-      message.error(error);
-    });
+    this.setState({ modalVisible: true, uin_id: wxid })
   }
-  //更新   todo 接口暂时没好
+  UINSuccess() {
+    message.success('清uin成功', 2)
+  }
+  modalOk() {
+    this.setState({ modalVisible: false })
+    const { dispatch } = this.props;
+    const { uin_id } = this.state;
+    const payload = { _id: uin_id, field: '/clearUin', uin: 0, _token: getTokenOfCSRF() }
+    dispatch(Actions.putAction(RES_NAME, payload, this.UINSuccess))
+  }
+  modalCancel() {
+    this.setState({ modalVisible: false })
+  }
+  //更新
   handleUpdate(wxid) {
     const { dispatch } = this.props;
-    const url = `${projectUrl}/${wxid}`;
-    xFetch(url).then(res => {
-      const data = res.jsonResult.data;
-      dispatch({
-        type: 'api/wx/update',
-        resName: RES_NAME,
-        payload: wxid,
-        data,
-      });
-      message.success('更新成功');
-    }, error => {
-      message.error(error);
-    });
+    const operate = { id: wxid, field: '/loginStatus' }
+    dispatch(Actions.getInfoAction(RES_NAME, operate, this.updateSuccess))
+  }
+  updateSuccess(data) {
+    message.success('更新成功', 2)
   }
   //清除   todo 接口暂时没弄好
   handleClear(wxid) {
@@ -238,6 +211,7 @@ class Projects extends Component {
       message.error(error);
     })
   }
+
   render() {
     const { projects = {}, resources = {}, filter = {} } = this.props
     const { loading, list, pagination } = resources;
@@ -279,6 +253,16 @@ class Projects extends Component {
             handleCloseEss={this.handleCloseEss.bind(this)}
           />
         </Editor>
+        <Modal
+          visible={this.state.modalVisible}
+          onOk={this.modalOk.bind(this)}
+          onCancel={this.modalCancel.bind(this)}
+          confirmLoading={this.state.confirmLoading}
+          title="提示"
+          width={300}
+        >
+          <p>确定清除uin吗？</p>
+        </Modal>
       </section>
     )
   }

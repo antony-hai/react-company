@@ -2,14 +2,14 @@ import { takeLatest } from 'redux-saga';
 import { take, call, put, fork, cancel } from 'redux-saga/effects';
 import { getAll } from '../services/menus';
 import { message } from 'antd';
+import { Menus as Actions } from '../actions'
 
 function* getAllMenus() {
   try {
     const { jsonResult } = yield call(getAll);
     if (jsonResult.data) {
       yield put({
-        type: 'menus/get/success',
-        //TODO  这里写死了 后面跟新要换过来
+        type: Actions.GET_SUCCESS,
         payload: jsonResult.data,
       });
     }
@@ -19,12 +19,10 @@ function* getAllMenus() {
 }
 
 function* watchGetMenus() {
-  yield takeLatest('menus/get', getAllMenus);
+  yield takeLatest(Actions.GET, getAllMenus);
 }
 
 export default function* () {
   yield fork(watchGetMenus);
-  yield put({
-    type: 'menus/get',
-  });
+  yield put({ type: Actions.GET });
 }

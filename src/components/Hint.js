@@ -18,7 +18,7 @@ export function setCookie(name, value, expires) {
   document.cookie = `${name}=${escape(value)}; 
     expires=${expires.toGMTString()}; 
     path=/`
-}  
+}
 //根据cookie名，获得cookie值
 export function getCookie(name) {
   const search = `${name}=`;
@@ -26,7 +26,7 @@ export function getCookie(name) {
   if (offset !== -1) {
     offset += search.length;
     let end = document.cookie.indexOf(';', offset);
-    if (end === -1) { end = document.cookie.length };
+    if (end === -1) { end = document.cookie.length }
     return (document.cookie.substring(offset, end));
   } else { return '' }
 }
@@ -37,7 +37,7 @@ export function deleteCookie(name) {
   const expdate = new Date();
   expdate.setTime(expdate.getTime() - (3600 * 24 * 1000 * 1));
   setCookie(name, '', expdate);
-} 
+}
 
 
 //检查是否存在此 cookie

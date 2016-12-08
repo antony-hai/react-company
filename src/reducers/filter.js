@@ -44,6 +44,10 @@ export default handleActions({
     })
     return { ...state, ...newField };
   },
+  'filter/update'(state, action) {
+    const { payload = {} } = action
+    return { ...state, ...payload }
+  },
   'filter/submit'(state, action) {
     const { payload } = action;
     return {

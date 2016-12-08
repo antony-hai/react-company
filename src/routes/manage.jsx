@@ -12,6 +12,7 @@ import CreateChannel from '../components/Channels/Create';
 import CreatePosition from '../components/Sims/CreatePosition';
 import CreatePhone from '../components/Sims/CreatePhone';
 import PhoneSuccess from '../components/Sims/PhoneSuccess';
+import UploadPhone from '../components/Sims/UploadPhone';
 
 const manage = () => {
   return (
@@ -35,6 +36,7 @@ const manage = () => {
         <Route path="position" component={CreatePosition} />
         <Route path="phone" component={CreatePhone} />
         <Route path="success" component={PhoneSuccess} />
+        <Route path="upload" component={UploadPhone} />
       </Route>
     </Route>
   )

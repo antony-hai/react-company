@@ -7,12 +7,15 @@ import { regExp, toBase64 } from '../../services/common';
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch';
 import { createPhoneUrl, booksUrl } from '../../urlAddress'
 import styles from './sim.less'
+import * as Actions from '../../actions'
 
 
 const FormItem = Form.Item;
 const createForm = Form.create;
 const Option = Select.Option;
-let singleId = ''; //用来接后面返回的id
+let singleId = '';
+
+const RES_NAME = 'simCards';
 
 const gridSpan = {
   labelCol: {
@@ -35,55 +38,40 @@ class CreatePhone extends Component {
       remandMsg: '',
     }
   }
+  componentWillMount() {
+    const payload = { field: '/improve' }
+    this.props.dispatch(Actions.Book.getBooksAction(payload))
+  }
   //确认提交
   handleSubmit(e) {
     e.preventDefault();
     const form = this.props.form;
     form.validateFields((errors, values) => {
-      if (!!errors) {
-        return;
-      }
+      if (!!errors) { return; }
       const state = this.state;
       const { mobile, books, pages, boxes } = values;
-      let url = `${createPhoneUrl}/${singleId}`;
-      let method = 'PUT';
-
-      xFetch(url, {
-        method,
-        data: {
-          ...values,
-          _token: getTokenOfCSRF(),
-        },
-      }).then(res => {
-        this.props.dispatch({
-          type: 'createPhone/success',
-          data: { books, pages, boxes, mobile },
-        })
-        this.context.router.push('/manage/card/success');
-      }, error => {
-        message.error(error);
-      });
+      const data = { ...values, _id: singleId, _token: getTokenOfCSRF() }
+      this.props.dispatch(Actions.Res.putAction(
+        RES_NAME, data, this.handleSuccess.bind(this)
+      ))
     });
   }
-    // 获得页数
+  handleSuccess(data) {
+    //用于后面提示成功文本显示
+    this.props.dispatch({
+      type: Actions.Book.GET_BOX_SUCCESS,
+      payload: data,
+    })
+    this.context.router.push('/manage/card/success');
+  }
+  // 获得页数
   handleBooks(book) {
     const singBook = { book: parseFloat(book) }
-    const bookString = toBase64(singBook)
-    const { dispatch } = this.props;
-    const url = `${booksUrl}/pages?f=${bookString}`;
-    xFetch(url).then(res => {
-      const pages = res.jsonResult.data.data
-      this.setState({
-        remandMsg: '',
-      })
-      dispatch({
-        type: 'pages/get',
-        payload: pages,
-      })
-    },
-    error => {
-      message.error(error)
-    })
+    const payload = { singBook, field: '/improve' }
+    this.props.dispatch(Actions.Book.getPagesAction(payload, this.pagesSuccess.bind(this)))
+  }
+  pagesSuccess(data) {
+    this.setState({ remandMsg: '' })
   }
   //获得格子数
   handlePages(page) {
@@ -94,21 +82,11 @@ class CreatePhone extends Component {
       book: parseFloat(books),
       page: parseFloat(page),
     }
-    const pageString = toBase64(singPage)
-    const url = `${booksUrl}/boxes?f=${pageString}`;
-    xFetch(url)
-      .then(res => {
-        const boxes = res.jsonResult.data.data;
-        this.setState({ remandMsg: '' })
-        dispatch({
-          type: 'boxes/get',
-          payload: boxes,
-        })
-      },
-      error => {
-        message.error(error);
-      }
-      )
+    const payload = { singPage, field: '/improve' }
+    dispatch(Actions.Book.getBoxesAction(payload, this.boxesSuccess.bind(this)))
+  }
+  boxesSuccess(data) {
+    this.setState({ remandMsg: '' })
   }
   //获取PUT方法的id值
   handleBoxes(box) {
@@ -120,25 +98,16 @@ class CreatePhone extends Component {
       page: parseFloat(pages),
       box: parseFloat(box),
     }
-    const boxString = toBase64(singBox)
-    const url = `${booksUrl}/box?f=${boxString}`;
-    xFetch(url).then(res => {
-      singleId = res.jsonResult.data._id;
-      const { mobile } = res.jsonResult.data
-      if (mobile && mobile !== '') {
-        this.setState({ remandMsg: '此位已经录入电话号码' })
-      } else {
-        this.setState({ remandMsg: '' })
-      }
-      dispatch({
-        type: 'box/get',
-        payload: res.jsonResult.data,
-      })
-    },
-      error => {
-        message.error(error)
-      }
-    )
+    dispatch(Actions.Book.getBoxAction(singBox, this.boxSuccess.bind(this)))
+  }
+  boxSuccess(data) {
+    const { mobile, _id } = data;
+    singleId = _id
+    if (mobile && mobile !== '') {
+      this.setState({ remandMsg: '此位已经录入电话号码' })
+    } else {
+      this.setState({ remandMsg: '' })
+    }
   }
   render() {
     const { form, share, errors, books, pages, boxes } = this.props;
@@ -249,7 +218,7 @@ CreatePhone.contextTypes = {
 }
 
 const mapStateToProps = ({ position }) => {
- return Object.assign({}, { books: [], pages: [], boxes: [], box: {} }, position)
+  return Object.assign({}, { books: [], pages: [], boxes: [], box: {} }, position)
 }
 
 export default connect(mapStateToProps)(Form.create({})(CreatePhone)) ;

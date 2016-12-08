@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import NotFound from './NotFound';
 import Nav from '../components/Nav/Nav';
 import * as path from 'path';
+import { Auth as Actions } from '../actions'
 import { notification } from 'antd';
 import styles from './app.less';
 
@@ -21,9 +22,8 @@ class App extends Component {
       const raw = dom.attributes['data-auth'].value
       newState = JSON.parse(raw)
     }
-
     this.props.dispatch({
-      type: 'auth/init',
+      type: Actions.INIT,
       payload: newState,
     })
   }

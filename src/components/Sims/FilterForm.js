@@ -37,7 +37,7 @@ class FilterForm extends Component {
     }
   }
   getFromBook(num) {
-    if (!num) {
+    if (!num || num < 10000) {
       return undefined
     }
     const start = Math.floor(num / 10000)
@@ -47,25 +47,24 @@ class FilterForm extends Component {
       return `00${start}`
     } else if (100 <= start < 1000) {
       return `0${start}`
-    } else {
-      return `${start}`
     }
+    return `${start}`
   }
   getFromPage(num) {
-    if (!num) {
+    if (!num || num < 10000) {
       return undefined
     }
     const start = Math.floor(num % 10000 / 100)
     return start > 9 ? `${start}` : `0${start}`
   }
   getFromBox(num) {
-    if (!num) {
+    if (!num || num < 10000) {
       return undefined
     }
     const start = num % 100;
     return start > 9 ? `${start}` : `0${start}`
   }
-   //获得页数
+  //获得页数
   handleBooks1(book) {
     const singBook = { book: parseFloat(book) }
     const bookString = toBase64(singBook)
@@ -80,9 +79,9 @@ class FilterForm extends Component {
         pages1: list,
       })
     },
-    error => {
-      message.error(error)
-    })
+      error => {
+        message.error(error)
+      })
   }
   handleBooks2(book) {
     const singBook = { book: parseFloat(book) }
@@ -153,15 +152,41 @@ class FilterForm extends Component {
       }
       )
   }
+  handleSubmit() {
+    const { form, handleFilter } = this.props;
+    form.validateFields((err, values) => {
+      const { fromBooks, toBooks, fromPages, toPages,
+        fromBoxes, toBoxes, company, mobile } = values;
+      let index;
+      if (!!fromBooks && !!fromPages && !!fromBoxes && !!toBooks && !!toPages && !!toBoxes) {
+        index = [parseFloat(`${parseFloat(fromBooks)}${fromPages}${fromBoxes}`),
+          parseFloat(`${parseFloat(toBooks)}${toPages}${toBoxes}`)];
+      } else {
+        index = undefined;
+      }
+      console.info(index)
+      const makting = { company, mobile, index }
+      handleFilter(makting);
+    })
+  }
+  handleCancel() {
+    const { handleClear, form } = this.props
+    handleClear();
+    form.resetFields();
+    this.setState({ pages1: [], boxes1: [], pages2: [], boxes2: [] })
+  }
   render() {
-    const { form, handleFilter, handleClear, filter = {}, position = {}, resources: { list } } = this.props
+    const { form, filter = {}, position = {}, resources: { list } } = this.props
     const { books } = position
     const { pages1, pages2, boxes1, boxes2 } = this.state
-    const { getFieldProps, resetFields, validateFields, setFieldsValue } = form;
+    const { getFieldProps, setFieldsValue } = form;
     const { index = [] } = filter;
-    const [fromBook, toBook] = [this.getFromBook(index[0]), this.getFromBook(index[1])];
-    const [fromPage, toPage] = [this.getFromPage(index[0]), this.getFromPage(index[1])];
-    const [fromBox, toBox] = [this.getFromBox(index[0]), this.getFromBox(index[1])];
+    const fromBook = this.getFromBook(index[0]);
+    const toBook = this.getFromBook(index[1]);
+    const fromPage = this.getFromPage(index[0]);
+    const toPage = this.getFromPage(index[1]);
+    const fromBox = this.getFromBox(index[0]);
+    const toBox = this.getFromBox(index[1]);
     const companyName = [];
     const companyObj = {};
     list.forEach(item => {
@@ -172,27 +197,6 @@ class FilterForm extends Component {
         }
       }
     })
-    const onCancel = () => {
-      handleClear();
-      resetFields();
-    }
-    const onSubmit = () => {
-      validateFields((errors, values) => {
-        const { fromBooks, toBooks, fromPages, toPages,
-           fromBoxes, toBoxes, company, mobile } = values;
-        let index;
-        if (fromBooks === undefined || toBooks === undefined || fromPages === undefined
-          || toPages === undefined || fromBooks === undefined || toBooks === undefined
-        ) {
-          index = undefined;
-        } else {
-          index = [parseFloat(`${parseFloat(fromBooks)}${fromPages}${fromBoxes}`),
-          parseFloat(`${parseFloat(toBooks)}${toPages}${toBoxes}`)]
-        }
-        const makting = { company, mobile, index }
-        handleFilter(makting);
-      });
-    };
     return (
       <Form inline>
         <Row type="flex">
@@ -218,9 +222,9 @@ class FilterForm extends Component {
                 combobox
                 {...getFieldProps('company')}
               >
-               {companyName.map((item) => {
-                 return <Option key={item} >{item}</Option>
-               })}
+                {companyName.map((item) => {
+                  return <Option key={item} >{item}</Option>
+                })}
               </Select>
             </FormItem>
           </Col>
@@ -239,7 +243,7 @@ class FilterForm extends Component {
                 onSelect={this.handleBooks1.bind(this)}
               >
                 {books.map(value =>
-                  <Option value={`${value}`} key={value}>{value}</Option>
+                  <Option key={value}>{value}</Option>
                 )}
               </Select>
             </FormItem>
@@ -256,7 +260,7 @@ class FilterForm extends Component {
                 onSelect={this.handlePages1.bind(this)}
               >
                 {pages1.map(value =>
-                  <Option value={`${value}`} key={value}>{value}</Option>
+                  <Option key={value}>{value}</Option>
                 )}
               </Select>
             </FormItem>
@@ -272,7 +276,7 @@ class FilterForm extends Component {
                 })}
               >
                 {boxes1.map(value =>
-                  <Option value={`${value}`} key={value}>{value}</Option>
+                  <Option key={value}>{value}</Option>
                 )}
               </Select>
             </FormItem>
@@ -290,7 +294,7 @@ class FilterForm extends Component {
                 onSelect={this.handleBooks2.bind(this)}
               >
                 {books.map(value =>
-                  <Option value={`${value}`} key={value}>{value}</Option>
+                  <Option key={value}>{value}</Option>
                 )}
               </Select>
             </FormItem>
@@ -307,7 +311,7 @@ class FilterForm extends Component {
                 onSelect={this.handlePages2.bind(this)}
               >
                 {pages2.map(value =>
-                  <Option value={`${value}`} key={value}>{value}</Option>
+                  <Option key={value}>{value}</Option>
                 )}
               </Select>
             </FormItem>
@@ -323,7 +327,7 @@ class FilterForm extends Component {
                 })}
               >
                 {boxes2.map(value =>
-                  <Option value={`${value}`} key={value}>{value}</Option>
+                  <Option key={value}>{value}</Option>
                 )}
               </Select>
             </FormItem>
@@ -338,10 +342,10 @@ class FilterForm extends Component {
               type="primary"
               icon="search"
               style={{ marginRight: 10 }}
-              onClick={() => onSubmit()}
+              onClick={this.handleSubmit.bind(this)}
             >搜索</Button>
             <Button
-              onClick={() => onCancel()}
+              onClick={this.handleCancel.bind(this)}
             >清除条件</Button>
           </Col>
         </Row>

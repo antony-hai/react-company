@@ -3,18 +3,16 @@ import { Button } from 'antd';
 import { Link } from 'react-router';
 import styels from './sim.less';
 import { connect } from 'react-redux';
+import { indexCache } from '../../services/common'
 
 class PhoneSuccess extends Component {
-  constructor() {
-    super()
-  }
 
   render() {
-    const { mobile, boxes, pages, books } = this.props.phoneMsg;
+    const { mobile = '', index = {} } = this.props.box;
     return (
       <div className={styels.successBox}>
         <p>
-          {`号码：${mobile} 已经成功录入 ${books} ${pages} ${boxes} 存放位`}
+          {`号码：${mobile} 已经成功录入 ${indexCache(index)} 存放位`}
         </p>
         <div>
           <Button type="primary" style={{ marginRight: 15 }}>
@@ -30,10 +28,9 @@ class PhoneSuccess extends Component {
 }
 
 
-const mapStateToProps = ({ phoneMsg = {} }) => {
-  return {
-    phoneMsg: Object.assign({}, { books: '', pages: '', boxes: '', mobile: '' }, { ...phoneMsg.msg }),
-  }
+const mapStateToProps = ({ position = {} }) => {
+  const { box = {} } = position
+  return { box }
 }
 
 export default connect(mapStateToProps)(PhoneSuccess);

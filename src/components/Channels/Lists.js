@@ -28,33 +28,33 @@ export default class Lists extends Component {
         title: '使用时间',
         key: 'serviceTime',
         render(record) {
-          const { startDate, endDate } = record;
-          if (startDate === null || endDate === null) {
+          const { startDate = '', endDate = '' } = record;
+          if (!startDate || !endDate) {
             return (<sapn>永久使用</sapn>)
-          } 
+          }
           const startServer = startDate.substring(0, 10);
           const endServer = endDate.substring(0, 10);
           return (<span>{`${startServer} 至 ${endServer}`}</span>)
-        }
+        },
       },
       {
         title: '数据插件',
-        key: 'ecoModule',
+        key: 'plugins',
         render(record) {
           const { options = {} } = record
-          if (Array.isArray(options)) {
-            return null;
-          } else if (options.hasOwnProperty('ecoModul')) {
-            return <span>{options.ecoModul}</span>
+          const { plugins } = options;
+          if (plugins) {
+            return <span>{plugins}</span>
           }
-        }
+          return '-'
+        },
       },
       {
         title: '状态',
         key: 'channelStatus',
         render(record) {
-          const nowTime = new Date().getTime()
-          const { startDate, endDate } = record;     
+          const nowTime = new Date().getTime();
+          const { startDate, endDate } = record;  
           const startTime = new Date(startDate).getTime();
           const endTiem = new Date(endDate).getTime();
           const [color1, color2, color3] = ['#54E240', '#2DB7F5', 'red'];

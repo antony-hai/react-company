@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { Spin, message, Row, Col, Button, Icon } from 'antd'
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch'
-import { getListAction } from '../../services/resources'
 import { when, toBase64 } from '../../services/common';
 import FilterBox, { handleCreateFilter, handleSubmitFilter } from '../FilterBox'
 import FilterForm from './FilterForm'
 import Lists from './Lists'
 import styles from '../app.less'
+import * as Actions from '../../actions'
 
 
 const RES_NAME = 'simCards';
@@ -29,24 +29,20 @@ class Sims extends Component {
   }
   componentWillMount() {
     const { dispatch, resources: { pagination } } = this.props;
+    dispatch(Actions.Book.getBooksAction({ field: '' }))
     when(() => {
-      dispatch({
-        type: 'filter/clear',
-      });
+      dispatch({ type: 'filter/clear' });
     }).then(() => {
       this.loadResource(pagination);
-    }); 
+    });
   }
   onChange(pagination) {
     this.loadResource(pagination);
   }
-
   onSubmitFilter(filters) {
     const { dispatch } = this.props;
     when(() => {
-      dispatch(
-        handleSubmitFilter(filters)
-      );
+      dispatch(handleSubmitFilter(filters));
     }).then(() => {
       this.loadResource();
     });
@@ -54,19 +50,15 @@ class Sims extends Component {
 
   onClearFilter() {
     const { dispatch } = this.props;
-    dispatch(
-      handleSubmitFilter(thisFilter)
-    );
+    dispatch(handleSubmitFilter(thisFilter));
   }
 
   //重新加载页面
   loadResource(pagination = { current: 1 }) {
     const { filter, dispatch } = this.props;
     const { current: page = 1 } = pagination;
-    dispatch(getListAction({
-      resName: RES_NAME,
-      filter,
-      page,
+    dispatch(Actions.Res.getListAction({
+      resName: RES_NAME, filter, page,
     }));
   }
   //升序排序
@@ -74,11 +66,8 @@ class Sims extends Component {
     const { dispatch, filter } = this.props;
     const { current: page = 1 } = pagination;
     const sort = { indexCache: 1 };
-    dispatch(getListAction({
-      resName: RES_NAME,
-      filter,
-      page,
-      sort,
+    dispatch(Actions.Res.getListAction({
+      resName: RES_NAME, filter, page, sort,
     }));
   }
   //降序排序
@@ -86,11 +75,8 @@ class Sims extends Component {
     const { dispatch, filter } = this.props;
     const { current: page = 1 } = pagination;
     const sort = { indexCache: -1 }
-    dispatch(getListAction({
-      resName: RES_NAME,
-      filter,
-      page,
-      sort,
+    dispatch(Actions.Res.getListAction({
+      resName: RES_NAME, filter, page, sort,
     }));
   }
 
@@ -107,10 +93,13 @@ class Sims extends Component {
         <div className={styles.anyBox2}>
           <div>
             <Link to="/manage/card/position">
-              <Button type="primary" style={{ marginRight: 10 }}>创建卡位柜</Button>
+              <Button type="primary" style={{ marginRight: 8 }}>创建卡位柜</Button>
             </Link>
             <Link to="/manage/card/phone">
-              <Button type="primary">录入手机号</Button>
+              <Button type="primary" style={{ marginRight: 8 }}>录入手机号</Button>
+            </Link>
+            <Link to="/manage/card/upload">
+              <Button type="primary">批量导入</Button>
             </Link>
           </div>
           <div className={styles.boxr}>

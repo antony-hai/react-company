@@ -13,27 +13,7 @@ export function when(func, timeout = 0) {
     }
   });
 }
-/**
- * 验证当前登陆的用户是否是管理员级别
- */
-const hasAdmin = (auth = {}) => {
-  const hasRole = auth.hasOwnProperty('role');
-  const hasGroup = auth.hasOwnProperty('groupRole');
-  const isSuperRole = hasRole && auth.role === 1;
-  const isGroupRole = hasRole && auth.role === 2 && hasGroup && auth.groupRole === 2;
-  return {
-    super: isSuperRole,
-    group: isGroupRole,
-  };
-}
-// 是否是超级管理员
-export function hasSuperAdmin(auth = {}) {
-  return hasAdmin(auth).super;
-}
-// 是否是业务管理员
-export function hasGroupAdmin(auth = {}) {
-  return hasAdmin(auth).group;
-}
+
 
 /**
  * 将数据转换为蚂蚁的TreeSelect组件所需的格式

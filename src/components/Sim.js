@@ -12,6 +12,8 @@ export default ({ children, location }) => {
         return 'SIM卡卡柜列表';
       case 'phone':
         return '录入电话号码';
+      case 'upload':
+        return '批量导入手机号';
       case 'position':
         return '创建SIM卡卡柜';
       case 'success':
