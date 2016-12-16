@@ -1,10 +1,8 @@
-
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Row, Col, Form, Input, Button, message } from 'antd';
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch';
-import { createPositionUrl } from '../../urlAddress'
 import { regExp } from '../../services/common'
 import styles from './sim.less'
 import * as Actions from '../../actions'

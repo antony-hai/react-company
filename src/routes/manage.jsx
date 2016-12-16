@@ -13,6 +13,7 @@ import CreatePosition from '../components/Sims/CreatePosition';
 import CreatePhone from '../components/Sims/CreatePhone';
 import PhoneSuccess from '../components/Sims/PhoneSuccess';
 import UploadPhone from '../components/Sims/UploadPhone';
+import UploadWx from '../components/Projects/UploadWx';
 
 const manage = () => {
   return (
@@ -22,6 +23,7 @@ const manage = () => {
         <IndexRedirect to="list" />
         <Route path="list" component={Projects} />
         <Route path="create" component={CreateWx} />
+        <Route path="upload" component={UploadWx} />
         <Route path="create/:id" component={CreateWx} />
       </Route>
       <Route path="channel" component={Channel}>

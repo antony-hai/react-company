@@ -7,7 +7,6 @@ import xFetch, { getTokenOfCSRF } from '../../services/xFetch';
 import { regExp, toBase64 } from '../../services/common';
 import { accountStatus } from '../../staticData'
 import styles from './project.less'
-import { projectUrl, booksUrl } from '../../urlAddress'
 import * as Actions from '../../actions'
 
 
@@ -47,14 +46,14 @@ class CreateEditor extends Component {
       fileList: [],
       priviewVisible: false,
       accountStatus: '1',
-      loginStatus: true,
       mobileMsg: '',
+      loginMobile: undefined,
     }
   }
 
   componentWillMount() {
     //去拿到所有的册子
-    const payload = { field: '' }
+    const payload = { wxClient_id: '' }
     this.props.dispatch(Actions.Book.getBooksAction(payload))
     const { params } = this.props;
     if (params.hasOwnProperty('id')) {
@@ -123,9 +122,8 @@ class CreateEditor extends Component {
   }
 // 获得页数
   handleBooks(book) {
-    const singBook = { book: parseFloat(book) }
-    const payload = { singBook }
-    this.props.dispatch(Actions.Book.getPagesAction(payload, this.pagesSuccess.bind(this)))
+    const singBook = { book: parseFloat(book), wxClient_id: '' }
+    this.props.dispatch(Actions.Book.getPagesAction(singBook, this.pagesSuccess.bind(this)))
   }
   pagesSuccess() {
     this.setState({ mobileMsg: '' })
@@ -138,9 +136,9 @@ class CreateEditor extends Component {
     const singPage = {
       book: parseFloat(books),
       page: parseFloat(page),
+      wxClient_id: '',
     }
-    const payload = { singPage }
-    dispatch(Actions.Book.getBoxesAction(payload, this.boxesSuccess.bind(this)))
+    dispatch(Actions.Book.getBoxesAction(singPage, this.boxesSuccess.bind(this)))
   }
   boxesSuccess() {
     this.setState({ mobileMsg: '' })
@@ -158,17 +156,8 @@ class CreateEditor extends Component {
     dispatch(Actions.Book.getBoxAction(singBox, this.boxSuccess.bind(this)))
   }
   boxSuccess(data) {
-    const { mobile, hasWxClient } = data
-    if (hasWxClient) {
-      this.setState({ mobileMsg: '此号码已创建微信' })
-    } else {
-      if (mobile !== '') {
-        this.setState({ mobileMsg: mobile })
-        singleId = data._id;
-      } else {
-        this.setState({ mobileMsg: '此位置还未绑定号码' })
-      }
-    }
+    const { mobile } = data
+    this.setState({ mobileMsg: mobile })
   }
 render() {
   const state = this.state;
@@ -348,6 +337,14 @@ render() {
               })}
             />
           </FormItem>
+          <FormItem {...gridSpan} label="登录手机">
+            <Input
+              placeholder="请填写登录手机"
+              {...getFieldProps('loginMobile', {
+                initialValue: state.loginMobile,
+              })}
+            />
+          </FormItem>
           <FormItem
             {...gridSpan}
             label="账号状态"
@@ -408,7 +405,7 @@ render() {
             />
           </FormItem>
           <Row>
-            <Col span={20} offset={4}>
+            <Col span={20} offset={3}>
               <Button
                 type="primary"
                 style={{ marginRight: 10 }}

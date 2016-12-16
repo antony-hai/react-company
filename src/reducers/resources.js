@@ -105,9 +105,17 @@ export default handleActions({
       [resName]: { ...resource, list: newList, loading: false },
     };
   },
+  [ACTIONS.GET_INFO](state, action) {
+    const { payload } = action
+    const id = payload.id;
+    return {
+      ...state,
+      info: { loading: true, used_id: id },
+    }
+  },
   [ACTIONS.GET_INFO_SUCCESS](state, action) {
     const { resName, payload } = action;
-    const { [resName]: resource = {} } = state
+    const { [resName]: resource = {}, info: singleInfo = {} } = state
     const { list = [] } = resource
     const newList = list.map(item => {
       if (item._id === payload._id) {
@@ -115,10 +123,70 @@ export default handleActions({
       }
       return item;
     })
+    let infoList = [];
+    let id_group = [];
+    if (payload.hasOwnProperty('data')) {
+      infoList = payload.data;
+      id_group = payload.data.map(item => {
+        return item._id;
+      })
+    } else {
+      infoList = payload
+    }
     return {
       ...state,
       [resName]: { ...resource, list: newList, loading: false },
-      info: payload,
+      info: { ...singleInfo, infoList, loading: false },
+      id_group,
+    }
+  },
+  [ACTIONS.ADD_WX_SUCCESS](state, action) {
+    const { payload } = action;
+    const { info: singleInfo = {} } = state;
+    const { infoList = [] } = singleInfo;
+    const newList = payload.concat(infoList)
+    const id_group = newList.map(item => {
+      return item._id;
+    })
+    return {
+      ...state,
+      info: { ...singleInfo, infoList: newList, loading: false },
+      id_group,
+    }
+  },
+  [ACTIONS.DELETE_WX](state, action) {
+    const { payload } = action
+    const { info: singleInfo = [], id_group = [] } = state;
+    const { infoList } = singleInfo;
+    const newList = [];
+    const newIdGroup = [];
+    infoList.forEach(item => {
+      if (item._id !== payload) {
+        newList.push(item);
+        newIdGroup.push(item._id)
+      }
+    })
+    return {
+      ...state,
+      info: { ...singleInfo, infoList: newList, loading: false },
+      id_group: newIdGroup,
+    }
+  },
+  [ACTIONS.DELETE_ALL_WX](state, action) {
+    const { info: singleInfo = [], id_group = [] } = state;
+    const { infoList } = singleInfo;
+    const newList = [];
+    const newIdGroup = [];
+    infoList.forEach(item => {
+      if (item.project_id) {
+        newList.push(item);
+        newIdGroup.push(item._id);
+      }
+    })
+    return {
+      ...state,
+      info: { ...singleInfo, infoList: newList, loading: false },
+      id_group: newIdGroup,
     }
   },
   'api/wxclient/login'(state, action) {

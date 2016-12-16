@@ -8,9 +8,9 @@ import { message } from 'antd';
 //获得册子
 function* getAllBooks(action) {
   const { payload, callback } = action;
-  const { field = '' } = payload
+  const url = toBase64(payload)
   try {
-    const { jsonResult } = yield call(getBooks, field);
+    const { jsonResult } = yield call(getBooks, url);
     if (jsonResult.data) {
       yield put({
         type: Actions.Book.GET_SUCCESS,
@@ -24,10 +24,9 @@ function* getAllBooks(action) {
 //获得页数
 function* getAllPages(action) {
   const { payload, callback } = action;
-  const { singBook, field = '' } = payload
-  const url = toBase64(singBook)
+  const url = toBase64(payload)
   try {
-    const { jsonResult } = yield call(getPages, url, field);
+    const { jsonResult } = yield call(getPages, url);
     yield put({
       type: Actions.Book.GET_PAGES_SUCCESS,
       payload: jsonResult.data.data,
@@ -42,10 +41,9 @@ function* getAllPages(action) {
 //获得格子数
 function* getAllBoxes(action) {
   const { payload, callback } = action;
-  const { singPage, field = '' } = payload
-  const url = toBase64(singPage)
+  const url = toBase64(payload)
   try {
-    const { jsonResult } = yield call(getBoxes, url, field);
+    const { jsonResult } = yield call(getBoxes, url);
     yield put({
       type: Actions.Book.GET_BOXES_SUCCESS,
       payload: jsonResult.data.data,
@@ -96,5 +94,4 @@ export default function* () {
   yield fork(watchGetPages);
   yield fork(watchGetBoxes);
   yield fork(watchGetBox);
- // yield put({ type: Actions.Book.GET });
 }

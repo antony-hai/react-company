@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Spin, message, Row, Col, Button } from 'antd'
+import { Spin, message, Row, Col, Button, Modal, Icon } from 'antd'
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch'
 import { when } from '../../services/common';
 import FilterBox, { handleCreateFilter, handleSubmitFilter } from '../FilterBox'
 import FilterForm from './FilterForm'
 import Lists from './Lists'
+import AddWx from './AddWx'
 import styles from '../app.less'
-import { channelUrl } from '../../urlAddress'
 import * as Actions from '../../actions'
 
 const RES_NAME = 'companies';
@@ -19,6 +19,12 @@ const thisFilter = {
 };
 
 class Channels extends Component {
+  constructor() {
+    super();
+    this.state = {
+      modalVisible: false,
+    }
+  }
   componentWillMount() {
     const { dispatch, resources: { pagination } } = this.props;
     when(() => {
@@ -29,7 +35,6 @@ class Channels extends Component {
       this.loadResource(pagination);
     });
   }
-
   onChange(pagination) {
     this.loadResource(pagination);
   }
@@ -66,6 +71,27 @@ class Channels extends Component {
   deleteSuccess() {
     message.success('禁用成功', 2)
   }
+  handleAddWx(id) {
+    this.setState({ modalVisible: true })
+    const { dispatch } = this.props;
+    const operate = { id, field: '/wxclients' }
+    dispatch(Actions.Res.getInfoAction(RES_NAME, operate))
+  }
+  cancelAddWx() {
+    this.setState({ modalVisible: false })
+  }
+  confirmAddWx() {
+    const { singleInfo, wx_ids, dispatch } = this.props;
+    const { used_id = '' } = singleInfo;
+    const data = { id: used_id, wx_ids, _token: getTokenOfCSRF() }
+    when(() => {
+      dispatch(Actions.Res.postWxAction(RES_NAME, data))
+      this.setState({ confirmLoading: true })
+    }, 1500).then(() => {
+      this.loadResource();
+      this.setState({ modalVisible: false, confirmLoading: false })
+    })
+  }
   render() {
     const { loading, list, pagination } = this.props.resources;
     if (loading) {
@@ -83,7 +109,7 @@ class Channels extends Component {
         <Row className={styles.anyBox}>
           <Col span={1}>
             <Link to="/manage/channel/create">
-              <Button type="primary">新建</Button>
+              <Button type="primary"><Icon type="plus" />新建</Button>
             </Link>
           </Col>
         </Row>
@@ -92,15 +118,30 @@ class Channels extends Component {
           pagination={pagination}
           onChange={this.onChange.bind(this)}
           handleDisabled={this.handleDisabled.bind(this)}
+          handleAddWx={this.handleAddWx.bind(this)}
         />
+        <Modal
+          title="配置微信"
+          width={850}
+          maskClosable={false}
+          confirmLoading={this.state.confirmLoading}
+          visible={this.state.modalVisible}
+          onCancel={this.cancelAddWx.bind(this)}
+          onOk={this.confirmAddWx.bind(this)}
+        >
+          <AddWx />
+        </Modal>
       </section>
     )
   }
 }
 
 const mapStateToProps = ({ resources, filter, cardGroup }) => {
+  const { info: singleInfo = {}, id_group = [] } = resources;
   return {
     resources: Object.assign({}, { list: [], pagination: {} }, resources[RES_NAME]),
+    singleInfo,
+    wx_ids: id_group,
     filter,
   }
 }

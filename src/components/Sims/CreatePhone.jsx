@@ -1,11 +1,9 @@
-
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Row, Col, Form, Input, Button, message, Cascader, Select } from 'antd';
 import { regExp, toBase64 } from '../../services/common';
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch';
-import { createPhoneUrl, booksUrl } from '../../urlAddress'
 import styles from './sim.less'
 import * as Actions from '../../actions'
 
@@ -39,7 +37,7 @@ class CreatePhone extends Component {
     }
   }
   componentWillMount() {
-    const payload = { field: '/improve' }
+    const payload = { mobile: '' }
     this.props.dispatch(Actions.Book.getBooksAction(payload))
   }
   //确认提交
@@ -66,9 +64,8 @@ class CreatePhone extends Component {
   }
   // 获得页数
   handleBooks(book) {
-    const singBook = { book: parseFloat(book) }
-    const payload = { singBook, field: '/improve' }
-    this.props.dispatch(Actions.Book.getPagesAction(payload, this.pagesSuccess.bind(this)))
+    const singBook = { book: parseFloat(book), mobile: '' }
+    this.props.dispatch(Actions.Book.getPagesAction(singBook, this.pagesSuccess.bind(this)))
   }
   pagesSuccess(data) {
     this.setState({ remandMsg: '' })
@@ -81,9 +78,9 @@ class CreatePhone extends Component {
     const singPage = {
       book: parseFloat(books),
       page: parseFloat(page),
+      mobile: '',
     }
-    const payload = { singPage, field: '/improve' }
-    dispatch(Actions.Book.getBoxesAction(payload, this.boxesSuccess.bind(this)))
+    dispatch(Actions.Book.getBoxesAction(singPage, this.boxesSuccess.bind(this)))
   }
   boxesSuccess(data) {
     this.setState({ remandMsg: '' })
@@ -126,7 +123,7 @@ class CreatePhone extends Component {
                 {...getFieldProps('mobile', {
                   rules: [
                     { required: true, message: '请输入手机号' },
-                    { pattern: regExp.mobile, message: '手机格式错误'}
+                    { pattern: regExp.mobile, message: '手机格式错误' },
                   ],
                 })}
               />

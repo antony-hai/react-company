@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Spin, message, Row, Col, Button, Modal } from 'antd'
+import { Spin, message, Row, Col, Button, Modal, Icon } from 'antd'
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch'
 import { Res as Actions } from '../../actions'
 import { when } from '../../services/common';
@@ -11,7 +11,6 @@ import FilterForm from './FilterForm'
 import Lists from './Lists'
 import styles from '../app.less'
 import Login from './Login'
-import { projectUrl } from '../../urlAddress'
 
 const RES_NAME = 'wxclients';
 const RES_PROJECT = 'projects';
@@ -203,13 +202,13 @@ class Projects extends Component {
   }
   //清除   todo 接口暂时没弄好
   handleClear(wxid) {
-    const url = `${projectUrl}/${wxid}/clear`;
-    xFetch(url).then(res => {
-      message.success('清除成功');
-    },
-    error => {
-      message.error(error);
-    })
+    // const url = `${projectUrl}/${wxid}/clear`;
+    // xFetch(url).then(res => {
+    //   message.success('清除成功');
+    // },
+    // error => {
+    //   message.error(error);
+    // })
   }
 
   render() {
@@ -231,9 +230,12 @@ class Projects extends Component {
           />
         </FilterBox>
         <Row className={styles.anyBox}>
-          <Col span={1}>
+          <Col>
             <Link to="/manage/project/create">
-              <Button type="primary">新建</Button>
+              <Button type="primary"><Icon type="plus" />新建</Button>
+            </Link>
+            <Link to="/manage/project/upload" style={{ marginLeft: 5 }}>
+              <Button type="primary"><Icon type="upload" />批量导入微信</Button>
             </Link>
           </Col>
         </Row>

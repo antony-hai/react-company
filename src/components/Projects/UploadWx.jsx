@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { message, Button, Upload, Icon } from 'antd'
 import { getTokenOfCSRF } from '../../services/xFetch'
 import { Link } from 'react-router'
-import styles from './sim.less'
+import styles from './project.less'
 
-class UploadPhone extends Component {
+class UploadWx extends Component {
   constructor() {
     super();
     this.state = {
@@ -43,7 +43,7 @@ class UploadPhone extends Component {
   render() {
     const uploadProps = {
       name: 'excel',
-      action: '/v1/simCards/import',
+      action: '/v1/wxclients/import',
       data: { _token: getTokenOfCSRF() },
       fileList: this.state.fileList,
       onChange: this.handleChange.bind(this),
@@ -59,9 +59,9 @@ class UploadPhone extends Component {
     if (successAll) {
       return (
         <section className={styles.uploadBox}>
-          <p style={{ color: 'green' }}>手机号导入成功!</p>
-          <Link to="/manage/card/list">
-            <Button type="primary" style={{ marginTop: 50 }}>返回卡柜</Button>
+          <p style={{ color: 'green' }}>微信号导入成功!</p>
+          <Link to="/manage/project/list">
+            <Button type="primary" style={{ marginTop: 50 }}>返回微信列表</Button>
           </Link>
         </section>
       )
@@ -72,8 +72,8 @@ class UploadPhone extends Component {
           {msg.map((item, index) => {
             return <p key={`${index}`} style={{ marginTop: 10 }}>{item}</p>
           })}
-          <Link to="/manage/card/list">
-            <Button type="primary" style={{ marginTop: 50 }}>返回卡柜</Button>
+          <Link to="/manage/project/list">
+            <Button type="primary" style={{ marginTop: 50 }}>返回微信列表</Button>
           </Link>
         </section>
       )
@@ -85,12 +85,12 @@ class UploadPhone extends Component {
             <Button type="primary"><Icon type="upload" />选择导入文件</Button>
           </Upload>
         </div>
-        <div className={styles.downloadE}>
-          <a href="/v1/simCards/export">下载导入模板</a>
+        <div style={{ marginTop: 50 }}>
+          <a href="/v1/wxclients/export"><Icon type="download" /> 下载导入模板</a>
         </div>
       </div>
     )
   }
 }
 
-export default UploadPhone;
+export default UploadWx;

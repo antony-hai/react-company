@@ -54,13 +54,18 @@ export default class Lists extends Component {
       },
       {
         title: '所属结构/组织',
-        key: 'project',
-        dataIndex: 'project',
+        key: 'projectName',
+        dataIndex: 'projectName',
       },
       {
         title: '好友数',
         key: 'contactNum',
         dataIndex: 'contactNum',
+      },
+      {
+        title: '登录手机',
+        key: 'loginMobile',
+        dataIndex: 'loginMobile',
       },
       {
         title: '登录状态',
@@ -95,7 +100,6 @@ export default class Lists extends Component {
       },
       {
         title: '操作',
-        width: 180,
         key: 'operation',
         render(record) {
           const { operation, _id } = record;

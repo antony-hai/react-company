@@ -11,6 +11,8 @@ export default ({ children, location }) => {
         return '创建微信';
       case 'create/':
         return '编辑';
+      case 'upload':
+        return '批量导入';
       case 'list':
       default:
         return '微信库';

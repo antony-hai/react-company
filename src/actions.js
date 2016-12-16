@@ -17,6 +17,12 @@ export const Res = {
   GET_FAIL: 'res/get/fail',
   GET_INFO: 'res/getInfo',
   GET_INFO_SUCCESS: 'res/getInfo/success',
+  ADD_WX: 'add/wx',
+  ADD_WX_SUCCESS: 'add/wx/success',
+  POST_WX: 'post/wx',
+  POST_WX_SUCCESS: 'post/wx/success',
+  DELETE_WX: 'delete/wx',
+  DELETE_ALL_WX: 'delete/all/wx',
   POST: 'res/post',
   POST_SUCCESS: 'res/post/success',
   PUT: 'res/put',
@@ -67,6 +73,22 @@ export const Res = {
   optionsAction(resName, payload = {}, callback) {
     return {
       type: this.OPTIONS,
+      resName,
+      payload,
+      callback,
+    }
+  },
+  addwxclientAction(resName, payload = {}, callback) {
+    return {
+      type: this.ADD_WX,
+      resName,
+      payload,
+      callback,
+    }
+  },
+  postWxAction(resName, payload = {}, callback) {
+    return {
+      type: this.POST_WX,
       resName,
       payload,
       callback,

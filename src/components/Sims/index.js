@@ -93,13 +93,13 @@ class Sims extends Component {
         <div className={styles.anyBox2}>
           <div>
             <Link to="/manage/card/position">
-              <Button type="primary" style={{ marginRight: 8 }}>创建卡位柜</Button>
+              <Button type="primary" style={{ marginRight: 8 }}><Icon type="plus" />创建卡位柜</Button>
             </Link>
             <Link to="/manage/card/phone">
-              <Button type="primary" style={{ marginRight: 8 }}>录入手机号</Button>
+              <Button type="primary" style={{ marginRight: 8 }}><Icon type="edit" />录入手机号</Button>
             </Link>
             <Link to="/manage/card/upload">
-              <Button type="primary">批量导入</Button>
+              <Button type="primary"><Icon type="upload" />批量导入</Button>
             </Link>
           </div>
           <div className={styles.boxr}>

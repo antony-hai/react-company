@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Menu, Spin } from 'antd';
+import { Menu, Spin, Icon } from 'antd';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import styles from './Menu.less';
@@ -27,7 +27,7 @@ class Menus extends Component {
             <Link
               to={`/${item.model}/${item.group}${item.uri}`}
               activeClassName={styles.menuSelected}
-            >{item.title}</Link>
+            ><Icon type="desktop" />{item.title}</Link>
           </ItemMenu>
         )}
         </GroupItemMenu>

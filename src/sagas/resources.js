@@ -47,7 +47,44 @@ function* getInfo(action) {
     message.error(err, 2)
   }
 }
-
+//给渠道添加微信号
+function* addWx(action) {
+  const { resName, payload, callback } = action
+  const { filter = 1, id } = payload
+  const needNum = { wxClientCount: filter }
+  const url = `f=${toBase64(needNum)}`
+  try {
+    const { jsonResult = {} } = yield call(Api.addWx, resName, id, url)
+    const { data } = jsonResult.data;
+    yield put({
+      type: Actions.Res.ADD_WX_SUCCESS,
+      payload: data,
+    })
+    if (typeof callback === 'function') {
+      callback(data)
+    }
+  } catch (err) {
+    message.error(err, 2)
+  }
+}
+//给渠道添加微信
+function* postAddwx(action) {
+  const { resName, payload, callback } = action;
+  try {
+    const { jsonResult = {} } = yield call(Api.postAddWx, resName, payload)
+    const { data } = jsonResult;
+    yield put({
+      type: Actions.Res.POST_WX_SUCCESS,
+      payload: data,
+      resName,
+    })
+    if (typeof callback === 'function') {
+      callback(data)
+    }
+  } catch (err) {
+    message.error(err, 2)
+  }
+}
 // 新建
 function* postRes(action) {
   const { resName, payload, callback } = action
@@ -129,14 +166,18 @@ function* watchGetResource() {
 function* watchGetInfo() {
   yield takeEvery(Actions.Res.GET_INFO, getInfo);
 }
-
+function* watchAddWx() {
+  yield takeEvery(Actions.Res.ADD_WX, addWx)
+}
+function* watchPostAddWx() {
+  yield takeLatest(Actions.Res.POST_WX, postAddwx);
+}
 function* watchPostRes() {
   yield takeEvery(Actions.Res.POST, postRes)
 }
 function* watchPutRes() {
   yield takeEvery(Actions.Res.PUT, putRes)
 }
-
 function* watchDeleteRes() {
   yield takeEvery(Actions.Res.DELETE, deleteRes)
 }
@@ -147,6 +188,8 @@ function* watchOptionsRes() {
 export default function* () {
   yield fork(watchGetResource);
   yield fork(watchGetInfo);
+  yield fork(watchAddWx);
+  yield fork(watchPostAddWx);
   yield fork(watchPostRes);
   yield fork(watchPutRes);
   yield fork(watchDeleteRes);

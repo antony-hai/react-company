@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Input, Button, Row, Col, message } from 'antd'
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch'
-import { passwordUrl } from '../../urlAddress'
 import styels from './password.less'
 import * as Actions from '../../actions'
 

@@ -3,10 +3,11 @@ import { Form, Input, Button, Row, Col, Select, Cascaderm, message } from 'antd'
 import styles from '../app.less';
 import { connect } from 'react-redux';
 import { toBase64 } from '../../services/common.js'
-import { booksUrl } from '../../urlAddress'
+import { version } from '../../actions'
 import xFetch, { getTokenOfCSRF } from '../../services/xFetch'
 
 const Option = Select.Option;
+const resName = 'simCards/indexes'
 const selectSpan = {
   wrapperCol: { span: 16 },
   labelCol: { span: 8 },
@@ -69,7 +70,7 @@ class FilterForm extends Component {
     const singBook = { book: parseFloat(book) }
     const bookString = toBase64(singBook)
     const { dispatch } = this.props;
-    const url = `${booksUrl}/pages?f=${bookString}`;
+    const url = `/${version}/${resName}/pages?f=${bookString}`;
     xFetch(url).then(res => {
       const pages = res.jsonResult.data.data
       const list = pages.map(item => {
@@ -87,7 +88,7 @@ class FilterForm extends Component {
     const singBook = { book: parseFloat(book) }
     const bookString = toBase64(singBook)
     const { dispatch } = this.props;
-    const url = `${booksUrl}/pages?f=${bookString}`;
+    const url = `/${version}/${resName}/pages?f=${bookString}`;
     xFetch(url).then(res => {
       const pages = res.jsonResult.data.data
       const list = pages.map(item => {
@@ -111,7 +112,7 @@ class FilterForm extends Component {
       page: parseFloat(page),
     }
     const pageString = toBase64(singPage)
-    const url = `${booksUrl}/boxes?f=${pageString}`;
+    const url = `/${version}/${resName}/boxes?f=${pageString}`;
     xFetch(url)
       .then(res => {
         const boxes = res.jsonResult.data.data;
@@ -136,7 +137,7 @@ class FilterForm extends Component {
       page: parseFloat(page),
     }
     const pageString = toBase64(singPage)
-    const url = `${booksUrl}/boxes?f=${pageString}`;
+    const url = `/${version}/${resName}/boxes?f=${pageString}`;
     xFetch(url)
       .then(res => {
         const boxes = res.jsonResult.data.data;
@@ -164,7 +165,6 @@ class FilterForm extends Component {
       } else {
         index = undefined;
       }
-      console.info(index)
       const makting = { company, mobile, index }
       handleFilter(makting);
     })

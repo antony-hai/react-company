@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 export default class Lists extends Component {
   handleColumns() {
-    const { handleDisabled } = this.props;
+    const { handleDisabled, handleAddWx } = this.props;
 
     return [
       {
@@ -87,7 +87,6 @@ export default class Lists extends Component {
       },
       {
         title: '操作',
-        width: 120,
         key: 'operation',
         render(record) {
           const nowTime = new Date().getTime();
@@ -106,11 +105,17 @@ export default class Lists extends Component {
                   to={`/manage/channel/create/${_id}`}
                 >编辑</Link>
                 <a onClick={() => handleDisabled(_id, record)}>{ctrlText}</a>
+                <a onClick={() => handleAddWx(_id)} style={{ marginLeft: 5 }}>配置微信</a>
               </div>
             )
           } else {
             if (new Date(endDate).getTime() < nowTime) {
-              return (<Link to={`/manage/channel/create/${_id}`}>编辑</Link>)
+              return (
+                <div>
+                  <Link to={`/manage/channel/create/${_id}`}>编辑</Link>
+                  <a onClick={() => handleAddWx(_id)} style={{ marginLeft: 5 }}>配置微信</a>
+                </div>
+              )
             } else {
               if (record.deleted_at) {
                 ctrlText = '启用';
@@ -124,6 +129,7 @@ export default class Lists extends Component {
                     to={`/manage/channel/create/${_id}`}
                   >编辑</Link>
                   <a onClick={() => handleDisabled(_id, record)}>{ctrlText}</a>
+                  <a onClick={() => handleAddWx(_id)} style={{ marginLeft: 5 }}>配置微信</a>
                 </div>
               )
             }

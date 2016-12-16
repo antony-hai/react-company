@@ -12,6 +12,18 @@ export async function getInfo(resName, operate) {
   const { id, field = '' } = operate
   return xFetch(`/${version}/${resName}/${id}${field}`)
 }
+//给渠道添加微信
+export async function addWx(resName, id, url) {
+  return xFetch(`/${version}/${resName}/${id}/wxclients/create?${url}`)
+}
+//提交添加微信
+export async function postAddWx(resName, data) {
+  const { id, ...postData } = data;
+  return xFetch(`/${version}/${resName}/${id}/wxclients`, {
+    method: 'POST',
+    data: postData,
+  })
+}
 // 新增
 export async function postRes(resName, data) {
   return xFetch(`/${version}/${resName}`, {

@@ -27,7 +27,7 @@ class PhoneSuccess extends Component {
   }
 }
 
-
+PhoneSuccess.PropTypes = {}
 const mapStateToProps = ({ position = {} }) => {
   const { box = {} } = position
   return { box }
