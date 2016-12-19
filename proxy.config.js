@@ -391,7 +391,7 @@ module.exports = {
             "box": 10,
           },
           "hasWxClint": false, //是否已绑定微信
-          "name": "实惠",
+          "companyName": "实惠",
 
         },
 
