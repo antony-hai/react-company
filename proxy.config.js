@@ -436,6 +436,14 @@ module.exports = {
             "hasWxClint": false,
             "companyName": "聚派",
           },
+<<<<<<< HEAD
+=======
+          "hasWxClint": false, //是否已绑定微信
+          "companyName": "实惠",
+
+        },
+
+>>>>>>> 165d661d91dae918850000fed310e577b19ef8e4
         ]
       }
     })
