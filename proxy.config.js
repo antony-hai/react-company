@@ -32,7 +32,7 @@ module.exports = {
                     "group": "project",
                     "model": "manage"
                   },
-                   {
+                  {
                     "_id": "5808b4c7bc1d2311a2264001925",
                     "key": "project/upload",
                     "title": "批量导入微信",
@@ -181,6 +181,24 @@ module.exports = {
       data: [],
     });
   },
+  'GET /v1/projects'(req, res) {
+    res.json({
+      success: true,
+      data: {
+        total: 2,
+        data: [
+          {
+            _id: "5809b932bc1d3a2894001301",
+            title: "闸北",
+          },
+          {
+            _id: "5811e401bc1d3a5284003721",
+            title: "宝山",
+          }
+        ]
+      }
+    })
+  },
   'POST /v1/simCards/import'(req, res) {
     res.json({
       success: true,
@@ -226,24 +244,24 @@ module.exports = {
             key: 'removeUIN',
             url: ""
           }, {
-            key: 'edit',
-            url: ""
-          }, {
-            key: 'qrcode',
-            url: ""
-          },
-          {
-            key: 'login',
-            url: '',
-          },
-          {
-            key: 'clear',
-            url: '',
-          },
-          {
-            key: 'update',
-            url: '',
-          }
+              key: 'edit',
+              url: ""
+            }, {
+              key: 'qrcode',
+              url: ""
+            },
+            {
+              key: 'login',
+              url: '',
+            },
+            {
+              key: 'clear',
+              url: '',
+            },
+            {
+              key: 'update',
+              url: '',
+            }
           ]
         },],
       },
@@ -270,6 +288,24 @@ module.exports = {
         uin: '0',
       },
     });
+  },
+  'GET /v1/wxclients/:id/remove'(req, res) {
+     res.json({
+       success: true,
+       data: [],
+     })
+  },
+  'GET /v1/wxclients/:id/loginStatus'(req, res) {
+     res.json({
+       success: true,
+       data: [],
+     })
+  },
+  'PUT /v1/wxclients/:id/clearUin'(req, res) {
+     res.json({
+       success: true,
+       data: [],
+     })
   },
   'PATCH /v1/wxclients/:id'(req, res) {
     const id = req.params.id;
@@ -351,12 +387,12 @@ module.exports = {
   'GET /v1/simCards/indexes/box'(req, res) {
     res.json({
       success: true,
-       "data": {
+      "data": {
         "mobile": "13333333333",
         "index": {
-            "book": 1,
-            "page": 1,
-            "box": 1
+          "book": 1,
+          "page": 1,
+          "box": 1
         },
         "company_id": "",
         "indexCache": 10101,
@@ -377,24 +413,29 @@ module.exports = {
         "prev_page_url": null,
         "from": 1,
         "to": 20,
-        "data": [{
-          "mobile": 12123,
-          "index": {
-            "book": 2,
-            "page": 3,
-            "box": 10,
+        "data": [
+          {
+            "mobile": 12123,
+            "index": {
+              "book": 2,
+              "page": 3,
+              "box": 10,
+            },
+            "company_id": "",
+            "hasWxClint": false,
+            "companyName": "实惠",
           },
-          "company_id": "",
-          "index": {
-            "book": 2,
-            "page": 3,
-            "box": 10,
+          {
+            "mobile": 12123,
+            "index": {
+              "book": 1,
+              "page": 1,
+              "box": 1,
+            },
+            "company_id": "",
+            "hasWxClint": false,
+            "companyName": "聚派",
           },
-          "hasWxClint": false, //是否已绑定微信
-          "name": "实惠",
-
-        },
-
         ]
       }
     })
@@ -584,76 +625,76 @@ module.exports = {
             mobile: '13212123333',
             nickName: 'maybe-zhong',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
-           {
+          {
             _id: '4234adsaf134253dcdffa34',
             mobile: '13212123333',
             nickName: 'maybe-ling',
-            index: { book: 1, page: 2, box: 1},
+            index: { book: 1, page: 2, box: 1 },
           },
           {
             _id: '4234adcdff4125a34',
             mobile: '13212123333',
             nickName: 'maybe-zhong',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adcd1431ffa34',
             mobile: '13212123333',
             nickName: 'maybe-zhong',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adcdff4421a34',
             mobile: '13212123333',
             nickName: 'maybe-zhong',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adc22dffa34',
             mobile: '13212123333',
             nickName: 'maybe-zhong',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adc33dffa34',
             mobile: '13212123333',
             nickName: 'maybe-ning',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adc11dffa34',
             mobile: '13212123333',
             nickName: 'maybe-shu',
             project_id: '',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adc43234dffa34',
             mobile: '13212123333',
             nickName: 'maybe-zhong',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adcd123ffa34',
             mobile: '13212123333',
             nickName: 'maybe-hei',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
           {
             _id: '4234adcdasdaffa34',
             mobile: '13212123333',
             nickName: 'maybe-zhong',
             project_id: '234afaf23424',
-            index: { book: 1, page: 3, box: 1},
+            index: { book: 1, page: 3, box: 1 },
           },
         ]
       }
@@ -665,18 +706,24 @@ module.exports = {
       data: {},
     })
   },
-  'GET /v1/companies/:id/wxclients/create'(req,res){
+  'DELETE /v1/companies/:id/wxclients/create'(req, res) {
+    res.json({
+      success: true,
+      data: {},
+    })
+  },
+  'GET /v1/companies/:id/wxclients/create'(req, res) {
     const id = req.params._id
     res.json({
       success: true,
       data: {
         total: 2,
         data: [
-         {
+          {
             _id: '4234ad345325cdffa34',
             mobile: '13212123333',
             nickName: 'ning-zhong',
-            index: { book: 1, page: 1, box: 1},
+            index: { book: 1, page: 1, box: 1 },
           },
         ],
       }

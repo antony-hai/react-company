@@ -67,7 +67,7 @@ function* addWx(action) {
     message.error(err, 2)
   }
 }
-//给渠道添加微信
+//确认或者取消添加微信号
 function* postAddwx(action) {
   const { resName, payload, callback } = action;
   try {

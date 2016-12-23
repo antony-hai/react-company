@@ -202,15 +202,13 @@ class Projects extends Component {
   }
   //清除   todo 接口暂时没弄好
   handleClear(wxid) {
-    // const url = `${projectUrl}/${wxid}/clear`;
-    // xFetch(url).then(res => {
-    //   message.success('清除成功');
-    // },
-    // error => {
-    //   message.error(error);
-    // })
+    const { dispatch } = this.props;
+    const operate = { id: wxid, field: '/remove' }
+    dispatch(Actions.getInfoAction(RES_NAME, operate, this.clearSuccess))
   }
-
+  clearSuccess() {
+    message.success('清除成功', 2)
+  }
   render() {
     const { projects = {}, resources = {}, filter = {} } = this.props
     const { loading, list, pagination } = resources;

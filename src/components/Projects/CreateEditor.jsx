@@ -156,7 +156,8 @@ class CreateEditor extends Component {
     dispatch(Actions.Book.getBoxAction(singBox, this.boxSuccess.bind(this)))
   }
   boxSuccess(data) {
-    const { mobile } = data
+    const { mobile, _id } = data
+    singleId = _id;
     this.setState({ mobileMsg: mobile })
   }
 render() {

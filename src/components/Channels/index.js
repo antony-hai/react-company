@@ -55,7 +55,7 @@ class Channels extends Component {
     const { current: page = 1 } = pagination;
     dispatch(Actions.Res.getListAction({ resName: RES_NAME, filter, page }));
   }
-
+  //禁用启用
   handleDisabled(userId, record) {
     const { dispatch } = this.props;
     const data = { _id: userId, _token: getTokenOfCSRF() }
@@ -71,6 +71,7 @@ class Channels extends Component {
   deleteSuccess() {
     message.success('禁用成功', 2)
   }
+  //打开添加微信modal
   handleAddWx(id) {
     this.setState({ modalVisible: true })
     const { dispatch } = this.props;
@@ -79,11 +80,16 @@ class Channels extends Component {
   }
   cancelAddWx() {
     this.setState({ modalVisible: false })
+    const { singleInfo, dispatch } = this.props;
+    const { used_id = '' } = singleInfo;
+    const data = { id: used_id, field: '/create', _token: getTokenOfCSRF(), method: 'DELETE' }
+    dispatch(Actions.Res.postWxAction(RES_NAME, data))
   }
+  //确认添加微信
   confirmAddWx() {
     const { singleInfo, wx_ids, dispatch } = this.props;
     const { used_id = '' } = singleInfo;
-    const data = { id: used_id, wx_ids, _token: getTokenOfCSRF() }
+    const data = { id: used_id, wx_ids, _token: getTokenOfCSRF(), method: 'POST' }
     when(() => {
       dispatch(Actions.Res.postWxAction(RES_NAME, data))
       this.setState({ confirmLoading: true })

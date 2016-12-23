@@ -22,10 +22,9 @@ export default class Lists extends Component {
           const { index } = record;
           if (index) {
             return (<span>{indexCache(index)}</span>)
-          } else {
-            return '-'
-          }  
-        }
+          }
+          return '-'
+        },
       },
       {
         title: '所属渠道',

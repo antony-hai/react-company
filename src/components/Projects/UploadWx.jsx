@@ -22,19 +22,21 @@ class UploadWx extends Component {
     return flag
   }
   handleChange(file) {
-    //TODO   数据处理还需要修改
     let fileList = [...file.fileList]
     fileList = fileList.slice(-1);
     fileList = fileList.filter(item => {
       const { response } = item;
       if (!!response) {
-        const { success, data } = response;
-        if (data.length === 0) {
-          this.setState({ successAll: true })
-        } else {
-          this.setState({ successSome: true, msg: data });
+        const { success, data, message: err } = response;
+        if (success) {
+          if (Array.isArray(data) && data.length === 0) {
+            this.setState({ successAll: true })
+          } else {
+            this.setState({ successSome: true, msg: data });
+          }
+          return success
         }
-        return success;
+        message.error(err, 2)
       }
       return true;
     });

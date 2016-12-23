@@ -12,15 +12,15 @@ export async function getInfo(resName, operate) {
   const { id, field = '' } = operate
   return xFetch(`/${version}/${resName}/${id}${field}`)
 }
-//给渠道添加微信
+//给渠道添加微信或者释放以添加的微信
 export async function addWx(resName, id, url) {
   return xFetch(`/${version}/${resName}/${id}/wxclients/create?${url}`)
 }
-//提交添加微信
+//提交或者取消添加微信
 export async function postAddWx(resName, data) {
-  const { id, ...postData } = data;
-  return xFetch(`/${version}/${resName}/${id}/wxclients`, {
-    method: 'POST',
+  const { id, method, field = '', ...postData } = data;
+  return xFetch(`/${version}/${resName}/${id}/wxclients${field}`, {
+    method,
     data: postData,
   })
 }
