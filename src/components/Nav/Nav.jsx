@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import styles from './nav.less';
-import logoImg from '../../logo.png';
+import logoImg from '../../img/logo.png';
 import { connect } from 'react-redux'
 
 
@@ -31,9 +31,9 @@ class Nav extends React.Component {
   }
 }
 
-Nav.PropTypes = {
-  auth: PropTypes.Object,
-  menus: PropTypes.Object,
+Nav.propTypes = {
+  auth: PropTypes.object,
+  menus: PropTypes.object,
 }
 
 

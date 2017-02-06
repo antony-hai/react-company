@@ -15,12 +15,12 @@ class PhoneSuccess extends Component {
           {`号码：${mobile} 已经成功录入 ${indexCache(index)} 存放位`}
         </p>
         <div>
-          <Button type="primary" style={{ marginRight: 15 }}>
-            <Link to="/manage/card/phone">继续录入</Link>
-          </Button>
-          <Button type="ghost">
-            <Link to="/manage/card/list">返回卡位柜</Link>
-          </Button>
+          <Link to="/manage/card/phone">
+            <Button type="primary" style={{ marginRight: 15 }}>继续录入</Button>
+          </Link>
+          <Link to="/manage/card/list">
+            <Button type="ghost">返回卡位柜 </Button>
+          </Link>
         </div>
       </div>
     )
@@ -34,4 +34,5 @@ const mapStateToProps = ({ position = {} }) => {
 }
 
 export default connect(mapStateToProps)(PhoneSuccess);
+
 

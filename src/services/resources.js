@@ -55,3 +55,11 @@ export async function optionsRes(resName, data) {
     data,
   })
 }
+//修改部分
+export async function patchRes(resName, data) {
+  const { id } = data
+  return xFetch(`/${version}/${resName}/${id}/rpwd`, {
+    method: 'PATCH',
+    data,
+  })
+}

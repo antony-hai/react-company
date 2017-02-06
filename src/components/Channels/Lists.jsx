@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 export default class Lists extends Component {
   handleColumns() {
-    const { handleDisabled, handleAddWx } = this.props;
+    const { handleDisabled, handleAddWx, handleResetPwd } = this.props;
 
     return [
       {
@@ -54,26 +54,23 @@ export default class Lists extends Component {
         key: 'channelStatus',
         render(record) {
           const nowTime = new Date().getTime();
-          const { startDate, endDate } = record;  
+          const { startDate = '', endDate = '' } = record;
           const startTime = new Date(startDate).getTime();
           const endTiem = new Date(endDate).getTime();
           const [color1, color2, color3] = ['#54E240', '#2DB7F5', 'red'];
           if (record.deleted_at) {
             return (<span style={{ color: color3 }}>禁用</span>)
-          } else {
-            if (startDate === null || endDate === null) {
-              return <sapn style={{ color: color1 }}>正常使用</sapn>
-            } else {
-              if (startTime > nowTime) {
-                return (<span style={{ color: color2 }}>未开始</span>)
-              } else if (endTiem < nowTime) {
-                return (<span style={{ color: color3 }}>已到期</span>)
-              } else {
-                return (<sapn style={{ color: color1 }}>正常使用</sapn>)
-              }
-            }
           }
-        }
+          if (!startDate || !endDate) {
+            return <sapn style={{ color: color1 }}>正常使用</sapn>
+          }
+          if (startTime > nowTime) {
+            return (<span style={{ color: color2 }}>未开始</span>)
+          } else if (endTiem < nowTime) {
+            return (<span style={{ color: color3 }}>已到期</span>)
+          }
+          return (<sapn style={{ color: color1 }}>正常使用</sapn>)
+        },
       },
       {
         title: '微信总数',
@@ -106,6 +103,7 @@ export default class Lists extends Component {
                 >编辑</Link>
                 <a onClick={() => handleDisabled(_id, record)}>{ctrlText}</a>
                 <a onClick={() => handleAddWx(_id)} style={{ marginLeft: 5 }}>配置微信</a>
+                <a onClick={() => handleResetPwd(_id)} style={{ marginLeft: 5 }}>重置密码</a>
               </div>
             )
           } else {
@@ -114,6 +112,7 @@ export default class Lists extends Component {
                 <div>
                   <Link to={`/manage/channel/create/${_id}`}>编辑</Link>
                   <a onClick={() => handleAddWx(_id)} style={{ marginLeft: 5 }}>配置微信</a>
+                  <a onClick={() => handleResetPwd(_id)} style={{ marginLeft: 5 }}>重置密码</a>
                 </div>
               )
             } else {
@@ -130,6 +129,7 @@ export default class Lists extends Component {
                   >编辑</Link>
                   <a onClick={() => handleDisabled(_id, record)}>{ctrlText}</a>
                   <a onClick={() => handleAddWx(_id)} style={{ marginLeft: 5 }}>配置微信</a>
+                  <a onClick={() => handleResetPwd(_id)} style={{ marginLeft: 5 }}>重置密码</a>
                 </div>
               )
             }

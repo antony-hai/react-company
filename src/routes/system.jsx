@@ -1,6 +1,4 @@
 import React, { propTypes, Component } from 'react'
-import App from '../components/App.jsx'
-import NotFound from '../components/NotFound.jsx'
 import { Router, Route, IndexRedirect } from 'react-router'
 import Password from '../components/Password';
 import Amend from '../components/Passwords/Amend'

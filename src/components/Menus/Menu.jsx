@@ -27,7 +27,7 @@ class Menus extends Component {
             <Link
               to={`/${item.model}/${item.group}${item.uri}`}
               activeClassName={styles.menuSelected}
-            ><Icon type="desktop" />{item.title}</Link>
+            ><i className={`listicon listicon-${item.key}`}></i>{item.title}</Link>
           </ItemMenu>
         )}
         </GroupItemMenu>

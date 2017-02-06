@@ -42,6 +42,7 @@ class CreateChannel extends Component {
       password: '',
       alias: undefined,
       canUsePlugin: false,
+      needToken: false,
       plugin: undefined,
     }
   }
@@ -56,8 +57,8 @@ class CreateChannel extends Component {
     }
   }
   infoCallback(data) {
-    const { options, _id } = data;
-    const { canUsePlugin = false, plugins } = options;
+    const { options = {}, _id } = data;
+    const { canUsePlugin = false, plugins, needToken = false } = options;
     let plugin;
     if (Array.isArray(plugins) && plugins.length !== 0) {
       plugin = plugins[0]
@@ -74,6 +75,7 @@ class CreateChannel extends Component {
       ...data,
       serverTime,
       canUsePlugin,
+      needToken,
       plugin,
     });
   }
@@ -86,8 +88,15 @@ class CreateChannel extends Component {
     form.validateFields((errors, values) => {
       if (!!errors) { return; }
       const { plugin, date = [] } = values;
+      //不选择插件不让提交，编辑除外
+      if (state.canUsePlugin && !state.isEdit) {
+        if (!plugin) { message.error('请选择插件', 2); return }
+      }
       const plugins = state.canUsePlugin ? [plugin] : [];
-      const options = { canUsePlugin: this.state.canUsePlugin, plugins }
+      const options = {
+        canUsePlugin: this.state.canUsePlugin,
+        plugins,
+        needToken: this.state.needToken }
       let startDate;
       let endDate;
       if (date[0] && date[1]) {
@@ -126,9 +135,17 @@ class CreateChannel extends Component {
       })
     }
   }
-  disabledDate(current) {
-    // can not select days before today
-    return current && current.valueOf() < Date.now();
+  handleNeedToken(e) {
+    const { value } = e.target;
+    if (value === '1') {
+      this.setState({
+        needToken: !this.state.needToken,
+      })
+    } else {
+      this.setState({
+        needToken: false,
+      })
+    }
   }
   render() {
     const state = this.state;
@@ -171,163 +188,175 @@ class CreateChannel extends Component {
     if (editId && !isEdit) {
       return (<Spin />);
     }
-  return (
-    <section>
-      <Row>
-        <Form>
-          <FormItem
-            label="公司名"
-            {...gridSpan}
-          >
-            <Input
-              placeholder="请输入公司名"
-              autoComplete="off"
-              {...getFieldProps('name', {
-                initialValue: state.name,
-                rules: [
-                  { required: true, message: '请填写公司' },
-                ],
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label="联系人"
-            {...gridSpan}
-            id="contactPerson"
-          >
-            <Input
-              placeholder="请输入联系人"
-              autoComplete="off"
-              {...getFieldProps('contact', {
-                initialValue: state.contact,
-                rules: [
-                  { required: true, message: '请填写联系人' },
-                ],
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label="联系人手机"
-            {...gridSpan}
-            id="contactTel"
-          >
-            <Input
-              placeholder="请输入"
-              autoComplete="off"
-              {...getFieldProps('contactTel', {
-                initialValue: state.contactTel,
-                rules: [{ required: true, message: '联系人手机必填' },
-                  { pattern: regExp.mobile, message: '请输入正确的格式' },
-                ],
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label="邮箱"
-            {...gridSpan}
-            id="email"
-          >
-            <Input
-              placeholder="请输入"
-              autoComplete="off"
-              {...getFieldProps('email', {
-                initialValue: state.email,
-                rules: [{ required: true, message: '请输入邮箱' },
-                  { pattern: regExp.email, message: '请输入正确的格式' }],
-              })}
-            />
-          </FormItem>
-          <FormItem label="别名" {...gridSpan}>
-            <Input
-              placeholder="请输入"
-              {...getFieldProps('alias', {
-                initialValue: state.alias,
-                rules: [{ required: true, message: '请输入别名' },
-                  { pattern: regExp.alias, message: '请输入以字母开头的数字字母组合' },
-                ],
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label="使用时间"
-            {...gridSpan}
-          >
-            <RangePicker
-              placeholder="请选择"
-              disabledDate={disabledDate}
-              {...getFieldProps('date', {
-                initialValue: state.serverTime,
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label="会员管理"
-            {...gridSpan}
-          >
-            <Checkbox
-              {...getFieldProps('canShareCustomer')}
-            >共享</Checkbox>
-          </FormItem>
-          <FormItem
-            label="会员信息"
-            {...gridSpan}
-          >
-            <CheckboxGroup
-              options={plainOptions}
-              {...getFieldProps('customerFields', {
-                initialValue: ['基础信息'],
-                rules: [
-                  { required: true, type: 'array', message: '至少选择一项' },
-                ],
-              })}
-            />
-          </FormItem>
-          {/*
-              <FormItem label="营销模块" {...gridSpan}>
-              <Checkbox
-                {...getFieldProps('ecoModule')}
-              >不使用</Checkbox>
+    return (
+      <section>
+        <Row>
+          <Form>
+            <FormItem
+              label="公司名"
+              {...gridSpan}
+            >
+              <Input
+                placeholder="请输入公司名"
+                autoComplete="off"
+                {...getFieldProps('name', {
+                  initialValue: state.name,
+                  rules: [
+                    { required: true, message: '请填写公司' },
+                  ],
+                })}
+              />
             </FormItem>
-          */}
-
-          <FormItem label="数据插件" {...gridSpan}>
-            <div className={styles.fl}>
+            <FormItem
+              label="联系人"
+              {...gridSpan}
+              id="contactPerson"
+            >
+              <Input
+                placeholder="请输入联系人"
+                autoComplete="off"
+                {...getFieldProps('contact', {
+                  initialValue: state.contact,
+                  rules: [
+                    { required: true, message: '请填写联系人' },
+                  ],
+                })}
+              />
+            </FormItem>
+            <FormItem
+              label="联系人手机"
+              {...gridSpan}
+              id="contactTel"
+            >
+              <Input
+                placeholder="请输入"
+                autoComplete="off"
+                {...getFieldProps('contactTel', {
+                  initialValue: state.contactTel,
+                  rules: [{ required: true, message: '联系人手机必填' },
+                    { pattern: regExp.mobile, message: '请输入正确的格式' },
+                  ],
+                })}
+              />
+            </FormItem>
+            <FormItem
+              label="邮箱"
+              {...gridSpan}
+              id="email"
+            >
+              <Input
+                placeholder="请输入"
+                autoComplete="off"
+                {...getFieldProps('email', {
+                  initialValue: state.email,
+                  rules: [{ required: true, message: '请输入邮箱' },
+                    { pattern: regExp.email, message: '请输入正确的格式' }],
+                })}
+              />
+            </FormItem>
+            <FormItem label="别名" {...gridSpan}>
+              <Input
+                placeholder="请输入"
+                {...getFieldProps('alias', {
+                  initialValue: state.alias,
+                  rules: [{ required: true, message: '请输入别名' },
+                    { pattern: regExp.alias, message: '请输入以字母开头的数字字母组合' },
+                  ],
+                })}
+              />
+            </FormItem>
+            <FormItem
+              label="使用时间"
+              {...gridSpan}
+            >
+              <RangePicker
+                placeholder="请选择"
+                disabledDate={disabledDate}
+                {...getFieldProps('date', {
+                  initialValue: state.serverTime,
+                })}
+              />
+            </FormItem>
+            <FormItem label="使用令牌" {...gridSpan}>
               <RadioGroup
                 disabled={state.isEdit}
-                {...getFieldProps('canUsePlugin', {
-                  initialValue: this.state.canUsePlugin ? '1' : '0',
-                  onChange: this.handlePlugin.bind(this),
+                {...getFieldProps('needToken', {
+                  initialValue: this.state.needToken ? '1' : '0',
+                  onChange: this.handleNeedToken.bind(this),
                 })}
               >
                 <Radio value="0">不使用</Radio>
                 <Radio value="1">使用</Radio>
               </RadioGroup>
-            </div>
-            {pluginDom()}
-          </FormItem>
-          <Row
-            style={{
-              paddingTop: 15,
-              borderTop: '1px dashed grey',
-            }}
-          >
-            <Col span={21} offset={2}>
-              <Button
-                type="primary"
-                style={{ marginRight: 10 }}
-                onClick={this.handleSubmit.bind(this)}
-              >
-                提交
-              </Button>
-              <Link to="/manage/channel/list">
-                <Button>取消</Button>
-              </Link>
-            </Col>
-          </Row>
-        </Form>
-      </Row>
-    </section>
-  )
+            </FormItem>
+            <FormItem
+              label="会员管理"
+              {...gridSpan}
+            >
+              <Checkbox
+                {...getFieldProps('canShareCustomer')}
+              >共享</Checkbox>
+            </FormItem>
+            <FormItem
+              label="会员信息"
+              {...gridSpan}
+            >
+              <CheckboxGroup
+                options={plainOptions}
+                {...getFieldProps('customerFields', {
+                  initialValue: ['基础信息'],
+                  rules: [
+                    { required: true, type: 'array', message: '至少选择一项' },
+                  ],
+                })}
+              />
+            </FormItem>
+            {/*
+                <FormItem label="营销模块" {...gridSpan}>
+                <Checkbox
+                  {...getFieldProps('ecoModule')}
+                >不使用</Checkbox>
+              </FormItem>
+            */}
+
+            <FormItem label="数据插件" {...gridSpan}>
+              <div className={styles.fl}>
+                <RadioGroup
+                  disabled={state.isEdit}
+                  {...getFieldProps('canUsePlugin', {
+                    initialValue: this.state.canUsePlugin ? '1' : '0',
+                    onChange: this.handlePlugin.bind(this),
+                  })}
+                >
+                  <Radio value="0">不使用</Radio>
+                  <Radio value="1">使用</Radio>
+                </RadioGroup>
+              </div>
+              {pluginDom()}
+            </FormItem>
+            <Row
+              style={{
+                paddingTop: 15,
+                borderTop: '1px dashed grey',
+              }}
+            >
+              <Col span={21} offset={2}>
+                <Button
+                  type="primary"
+                  style={{ marginRight: 10 }}
+                  onClick={this.handleSubmit.bind(this)}
+                >
+                  提交
+                </Button>
+                <Link to="/manage/channel/list">
+                  <Button>取消</Button>
+                </Link>
+              </Col>
+            </Row>
+          </Form>
+        </Row>
+      </section>
+    )
   }
 }
 

@@ -23,6 +23,8 @@ class Channels extends Component {
     super();
     this.state = {
       modalVisible: false,
+      pwdVisible: false,
+      singleId: '',
     }
   }
   componentWillMount() {
@@ -98,6 +100,23 @@ class Channels extends Component {
       this.setState({ modalVisible: false, confirmLoading: false })
     })
   }
+  //重置密码功能
+  handleResetPwd(cid) {
+    this.setState({ pwdVisible: true, singleId: cid })
+  }
+  cancelResetPwd() {
+    this.setState({ pwdVisible: false })
+  }
+  confirmResetPwd() {
+    const { singleId: id } = this.state
+    this.setState({ pwdVisible: false })
+    const data = { id, _token: getTokenOfCSRF() }
+    this.props.dispatch(Actions.Res.patchAction(RES_NAME, data, this.resetPwdSuccess))
+  }
+  resetPwdSuccess() {
+    message.success('重置成功!', 2)
+  }
+  handle
   render() {
     const { loading, list, pagination } = this.props.resources;
     if (loading) {
@@ -125,6 +144,7 @@ class Channels extends Component {
           onChange={this.onChange.bind(this)}
           handleDisabled={this.handleDisabled.bind(this)}
           handleAddWx={this.handleAddWx.bind(this)}
+          handleResetPwd={this.handleResetPwd.bind(this)}
         />
         <Modal
           title="配置微信"
@@ -136,6 +156,15 @@ class Channels extends Component {
           onOk={this.confirmAddWx.bind(this)}
         >
           <AddWx />
+        </Modal>
+        <Modal
+          title="重置密码"
+          width={300}
+          visible={this.state.pwdVisible}
+          onOk={this.confirmResetPwd.bind(this)}
+          onCancel={this.cancelResetPwd.bind(this)}
+        >
+          <p>确定重置密码吗？</p>
         </Modal>
       </section>
     )

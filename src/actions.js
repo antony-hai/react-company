@@ -31,6 +31,8 @@ export const Res = {
   DELETE_SUCCESS: 'res/delete/success',
   OPTIONS: 'res/options',
   OPTIONS_SUCCESS: 'res/options/success',
+  PATCH: 'res/patch',
+  PATCH_SUCCESS: 'res/patch/success',
   getListAction(params) {
     const { resName, filter, page = 1, sort } = params;
     return {
@@ -65,6 +67,14 @@ export const Res = {
   deleteAction(resName, payload = {}, callback) {
     return {
       type: this.DELETE,
+      resName,
+      payload,
+      callback,
+    }
+  },
+  patchAction(resName, payload = {}, callback) {
+    return {
+      type: this.PATCH,
       resName,
       payload,
       callback,

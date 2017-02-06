@@ -29,13 +29,10 @@ export default handleActions({
       current = currentPage * 1;
       data = [...datalist];
     }
-    const pagination = {
-      total,
-      current,
-      pageSize,
-      showQuickJumper: true,
-    };
-
+    let pagination = { total, current, pageSize, showQuickJumper: true }
+    if (resName === 'statistics') {
+      pagination = { ...pagination, pageSize: pageSize + 1 }
+    }
     return {
       ...state,
       [resName]: {

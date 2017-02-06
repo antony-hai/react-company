@@ -7,7 +7,7 @@ class MainLayout extends Component {
   render() {
     const { children } = this.props;
     return (
-      <Row type="flex" justify="space-between" gutter={32}>
+      <Row type="flex" justify="space-between" gutter={32} className={styles.main}>
         <Col span={4} className={styles.side}>
           <Menus />
         </Col>

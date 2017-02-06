@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { Router, Route, IndexRedirect, Link } from 'react-router';
 import manage from './manage'
 import system from './system'
+import statistics from './statistics'
 import NotFound from '../components/NotFound'
 import App from '../components/App'
 import MainLayout from '../layouts/MainLayout/MainLayout'
@@ -14,6 +15,7 @@ const Routes = ({ history }) =>
       <Route component={MainLayout}>
         {manage()}
         {system()}
+        {statistics()}
       </Route>
     </Route>
     <Route path="*" component={NotFound} />

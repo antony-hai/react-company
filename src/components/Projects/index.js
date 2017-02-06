@@ -200,7 +200,7 @@ class Projects extends Component {
   updateSuccess(data) {
     message.success('更新成功', 2)
   }
-  //清除   todo 接口暂时没弄好
+  //清除
   handleClear(wxid) {
     const { dispatch } = this.props;
     const operate = { id: wxid, field: '/remove' }

@@ -158,6 +158,23 @@ function* optionsRes(action) {
     message.error(err, 2)
   }
 }
+function* patchRes(action) {
+  const { resName, payload, callback } = action
+  try {
+    const { jsonResult = {} } = yield call(Api.patchRes, resName, payload)
+    const { data } = jsonResult
+    yield put({
+      type: Actions.Res.PATCH_SUCCESS,
+      payload: data,
+      resName,
+    })
+    if (typeof callback === 'function') {
+      callback(data)
+    }
+  } catch (err) {
+    message.error(err, 2)
+  }
+}
 
 
 function* watchGetResource() {
@@ -184,6 +201,9 @@ function* watchDeleteRes() {
 function* watchOptionsRes() {
   yield takeEvery(Actions.Res.OPTIONS, optionsRes)
 }
+function* watchPatchRes() {
+  yield takeEvery(Actions.Res.PATCH, patchRes)
+}
 
 export default function* () {
   yield fork(watchGetResource);
@@ -194,4 +214,5 @@ export default function* () {
   yield fork(watchPutRes);
   yield fork(watchDeleteRes);
   yield fork(watchOptionsRes);
+  yield fork(watchPatchRes);
 }

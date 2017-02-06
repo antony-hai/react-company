@@ -131,6 +131,27 @@ module.exports = {
             ]
           },
           {
+            key: 'statistics',
+            title: '报表',
+            list: [
+              {
+                "key": "report",
+                "title": "统计报表",
+                "list": [
+                  {
+                    "_id": "5808b4c7bc1d3a21924",
+                    "key": "comsReport",
+                    "title": "渠道报表",
+                    "uri": "/comsReport",
+                    "group": "report",
+                    "model": "statistics",
+                    "sort": 0
+                  },
+                ]
+              }
+            ]
+          },
+          {
             key: 'system',
             title: '系统',
             list: [
@@ -290,22 +311,22 @@ module.exports = {
     });
   },
   'GET /v1/wxclients/:id/remove'(req, res) {
-     res.json({
-       success: true,
-       data: [],
-     })
+    res.json({
+      success: true,
+      data: [],
+    })
   },
   'GET /v1/wxclients/:id/loginStatus'(req, res) {
-     res.json({
-       success: true,
-       data: [],
-     })
+    res.json({
+      success: true,
+      data: [],
+    })
   },
   'PUT /v1/wxclients/:id/clearUin'(req, res) {
-     res.json({
-       success: true,
-       data: [],
-     })
+    res.json({
+      success: true,
+      data: [],
+    })
   },
   'PATCH /v1/wxclients/:id'(req, res) {
     const id = req.params.id;
@@ -436,14 +457,6 @@ module.exports = {
             "hasWxClint": false,
             "companyName": "聚派",
           },
-<<<<<<< HEAD
-=======
-          "hasWxClint": false, //是否已绑定微信
-          "companyName": "实惠",
-
-        },
-
->>>>>>> 165d661d91dae918850000fed310e577b19ef8e4
         ]
       }
     })
@@ -555,10 +568,11 @@ module.exports = {
         _id: id,
         name: '腾讯',
         contact: '张小龙',
+        alias:'1234',
         contactTel: "18882256523",
         startDate: "2016-10-10 00:00:00",
         endDate: "2017-10-17 00:00:00",
-        options: { ecoModule: [] },
+        options: { ecoModule: [], needToken: true },
         wxClientCount: 3424,
         projectCount: 2222,
         serverTime: ['2016-10-05', '2017-05-05'],
@@ -621,7 +635,12 @@ module.exports = {
     })
 
   },
-
+  'PATCH /v1/companies/:id/rpwd'(req, res) {
+    res.json({
+      success: true,
+      data: [],
+    })
+  },
   'GET /v1/companies/:id/wxclients'(req, res) {
     res.json({
       success: true,
@@ -743,6 +762,55 @@ module.exports = {
       success: true,
       data: {
 
+      },
+    })
+  },
+  'GET /v1/statistics'(req, res) {
+    res.json({
+      success: true,
+      data: {
+        total: 20,
+        per_page: 5,
+        current_page: 1,
+        last_page: 1,
+        next_page_url: null,
+        prev_page_url: null,
+        from: 1,
+        to: 3,
+        data: [
+          {
+            _id: 'qwerwqrasf1231',
+            name: '腾讯',
+            startDate: "2016-10-10 00:00:00",
+            endDate: "2017-10-17 00:00:00",
+            accountCount: 20,
+            wxClientCount: 3424,
+            projectCount: 2222,
+            unusedCount: 1202,
+            contactNum: 20,
+            dialogueNum: 20,
+            sendMsgCount: 10,
+            getMsgCount: 5,
+            tagCount: 12,
+            deleted_at: '',
+          },
+          {
+            _id: 'qwerw12341qra2134sf1231',
+            name: '阿里巴巴',
+            startDate: "2016-10-10 00:00:00",
+            endDate: "2017-10-17 00:00:00",
+            accountCount: 20,
+            wxClientCount: 3424,
+            projectCount: 2222,
+            unusedCount: 1202,
+            contactNum: 20,
+            dialogueNum: 20,
+            sendMsgCount: 10,
+            getMsgCount: 5,
+            tagCount: 12,
+            deleted_at: '',
+          },
+        ],
       },
     })
   },
